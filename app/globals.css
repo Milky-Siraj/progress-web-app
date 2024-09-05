@@ -31,3 +31,13 @@ body {
     text-wrap: balance;
   }
 }
+ul li {
+  /* border: 1px solid #4b5563;  */
+  background-color: #29303b; /* Adjust the background color */
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+ul li:hover {
+  background-color: #4b5563; /* Lighter background color on hover */
+}
