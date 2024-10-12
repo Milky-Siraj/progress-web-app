@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { fetchSingleCproject } from "@/utils/request";
 
 const AddMemberModal = ({ closeModal, projectId }) => {
   const searchParams = useSearchParams();
@@ -53,28 +54,51 @@ const AddMemberModal = ({ closeModal, projectId }) => {
     updatedMembers.splice(index, 1);
     setTeamMembers(updatedMembers);
   };
+  // useEffect(() => {
+  //   const getProjectMembers = async () => {
+  //     try {
+  //       const fetchedProjectMembers = await fetchSingleCproject(id);
+  //       console.log(fetchedProjectMembers); // Log the entire response
+  //       setMembers(fetchedProjectMembers?.members || []);
+  //     } catch (error) {
+  //       console.error("Failed to fetch project members", error);
+  //     }
+  //   };
 
+  //   getProjectMembers();
+  // }, [id]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Extract only emails for submission
     const teamMemberEmails = teamMembers.map((member) => member.email);
-
     try {
-      const res = await fetch(`/api/add-members/${projectId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ members: teamMemberEmails }), // Send only emails
-      });
+      const fetchedProjectMembers = await fetchSingleCproject(projectId);
+      const fetchedMembers = fetchedProjectMembers?.members || [];
 
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Members added successfully:", data);
-        toast.success("Added successfully");
+      const newMembers = teamMemberEmails.filter(
+        (email) => !fetchedMembers.includes(email)
+      ); // Get emails not already in the project
+
+      if (newMembers.length > 0) {
+        // Proceed if there are new members to add
+        const res = await fetch(`/api/add-members/${projectId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ members: newMembers }), // Send only new emails
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Members added successfully:", data);
+          toast.success("Added successfully");
+        } else {
+          console.log("Failed to add members");
+          toast.error("Failed to add members");
+        }
       } else {
-        console.log("Failed to add members");
-        toast.error("Failed to add members");
+        toast.error("Already a Member");
       }
     } catch (error) {
       console.error("Error adding members:", error);
