@@ -41,3 +41,17 @@ ul li {
 ul li:hover {
   background-color: #4b5563; /* Lighter background color on hover */
 }
+
+/* Custom scrollbar styling */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 8px; /* Adjust the height of the scrollbar */
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #374151; /* gray-700 color */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #111827; /* gray-600 or darker gray */
+  border-radius: 9999px; /* Make it rounded */
+}

@@ -36,7 +36,7 @@ const Project = () => {
     const getProjectMembers = async () => {
       try {
         const fetchedProjectMembers = await fetchSingleCproject(id);
-        console.log(fetchedProjectMembers); // Log the entire response
+
         setMembers(fetchedProjectMembers?.members || []);
       } catch (error) {
         console.error("Failed to fetch project members", error);
@@ -45,8 +45,7 @@ const Project = () => {
 
     getProjectMembers();
   }, [id]);
-  console.log(members);
-  console.log(id);
+
   const openEditModal = (task) => {
     setSelectedTask(task);
     setIsEditModalOpen(true);
@@ -121,7 +120,7 @@ const Project = () => {
         </div>
         <h1 className="text-3xl font-bold mb-4">Team Members</h1>
 
-        <div className="flex gap-4 mb-6">
+        <div className="flex gap-4 mb-6 pb-4 overflow-x-auto whitespace-nowrap scrollbar-custom ">
           {members && members.length > 0 ? (
             members.map((member) => (
               <div
@@ -130,11 +129,6 @@ const Project = () => {
               >
                 <p>
                   {member} {/* Display the name */}
-                  <span className="text-gray-500 text-sm">
-                    {" "}
-                    / {member.role}
-                  </span>{" "}
-                  {/* Display the role */}
                 </p>
               </div>
             ))
@@ -143,7 +137,7 @@ const Project = () => {
               No members available
             </p> /* Fallback in case there are no members */
           )}
-          <div className="text-white px-4 py-1 rounded hover:bg-gray-400">
+          <div className="text-white text-l px-4 py-0 rounded bg-gray-700 hover:bg-gray-400 flex item-center justify-center">
             <button onClick={() => setIsAddMemberModalOpen(true)}>+</button>
           </div>
         </div>

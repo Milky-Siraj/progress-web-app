@@ -54,19 +54,7 @@ const AddMemberModal = ({ closeModal, projectId }) => {
     updatedMembers.splice(index, 1);
     setTeamMembers(updatedMembers);
   };
-  // useEffect(() => {
-  //   const getProjectMembers = async () => {
-  //     try {
-  //       const fetchedProjectMembers = await fetchSingleCproject(id);
-  //       console.log(fetchedProjectMembers); // Log the entire response
-  //       setMembers(fetchedProjectMembers?.members || []);
-  //     } catch (error) {
-  //       console.error("Failed to fetch project members", error);
-  //     }
-  //   };
 
-  //   getProjectMembers();
-  // }, [id]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Extract only emails for submission
