@@ -13,7 +13,7 @@ const TaskModal = ({ isOpen, onClose, addTask }) => {
     setTask((prevTasks) => ({
       ...prevTasks,
       title: value,
-      createdAt: new Date().toISOString().split("T")[0], // current date
+      createdAt: new Date().toISOString(), // current date
       completed: false,
     }));
   };

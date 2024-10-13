@@ -14,48 +14,34 @@ const HomeTasks = () => {
   useEffect(() => {
     const getTasks = async () => {
       const fetchedTasks = await fetchTasks(id);
-      setTasks(fetchedTasks);
-      setIsLoading(false); // Set loading to false after data is fetched
+      const parsedTasks = fetchedTasks.map((task) => ({
+        ...task,
+        createdAt: new Date(task.createdAt),
+      }));
+
+      setTasks(parsedTasks);
+      setIsLoading(false);
     };
 
     getTasks();
-  }, []); // Empty dependency array means this runs once when the component mounts
+  }, [id]);
 
   const addTask = (newTask) => {
-    setTasks([...tasks, newTask]); // Append new task to the existing task list
+    const taskWithDate = {
+      ...newTask,
+      createdAt: new Date(),
+    };
+    setTasks((prevTasks) => [...prevTasks, taskWithDate]);
   };
 
   const handleDelete = (taskId) => {
-    const updateTasks = tasks.filter((task) => task._id !== taskId);
-    setTasks(updateTasks);
+    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
   };
 
-  // Helper functions to group tasks
-  const isToday = (date) => {
-    const today = new Date();
+  // Helper function to format dates
+  const formatDate = (date) => date.toLocaleDateString();
 
-    // Normalize both dates to the beginning of the day
-    const startOfToday = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    );
-    const startOfTaskDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-
-    return startOfTaskDate.getTime() === startOfToday.getTime();
-  };
-
-  const isWithinDays = (date, days) => {
-    const today = new Date();
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() - days);
-    return date >= targetDate;
-  };
-
+  // Helper function to group tasks by date
   const groupTasks = () => {
     const todayTasks = [];
     const previous7DaysTasks = [];
@@ -86,6 +72,21 @@ const HomeTasks = () => {
     return { todayTasks, previous7DaysTasks, previous30DaysTasks, olderTasks };
   };
 
+  // Helper functions to check date ranges
+  const isToday = (date) => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
+  const isWithinDays = (date, days) => {
+    const today = new Date();
+    return (today - date) / (1000 * 3600 * 24) <= days; // Compare in days
+  };
+
   const { todayTasks, previous7DaysTasks, previous30DaysTasks, olderTasks } =
     groupTasks();
 
@@ -114,7 +115,7 @@ const HomeTasks = () => {
               {todayTasks.map((task) => (
                 <TaskListCard
                   key={task._id}
-                  task={task}
+                  task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
                 />
               ))}
@@ -130,7 +131,7 @@ const HomeTasks = () => {
               {previous7DaysTasks.map((task) => (
                 <TaskListCard
                   key={task._id}
-                  task={task}
+                  task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
                 />
               ))}
@@ -146,7 +147,7 @@ const HomeTasks = () => {
               {previous30DaysTasks.map((task) => (
                 <TaskListCard
                   key={task._id}
-                  task={task}
+                  task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
                 />
               ))}
@@ -160,7 +161,7 @@ const HomeTasks = () => {
               {olderTasks[monthYear].map((task) => (
                 <TaskListCard
                   key={task._id}
-                  task={task}
+                  task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
                 />
               ))}
@@ -172,7 +173,7 @@ const HomeTasks = () => {
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        addTask={addTask} // Re-enable adding tasks
+        addTask={addTask}
       />
     </div>
   );
