@@ -11,6 +11,8 @@ const HomeTasks = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isSelected, setIsSelected] = useState(true);
+
   useEffect(() => {
     const getTasks = async () => {
       const fetchedTasks = await fetchTasks(id);
@@ -76,9 +78,9 @@ const HomeTasks = () => {
   const isToday = (date) => {
     const today = new Date();
     return (
-      date.getDate() === today.getDate() &&
+      date.getFullYear() === today.getFullYear() &&
       date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
+      date.getDate() === today.getDate()
     );
   };
 
@@ -93,13 +95,39 @@ const HomeTasks = () => {
   return (
     <div className="bg-gray-800 min-h-screen p-6 text-white">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">My Tasks</h1>
+        <h1 className="text-4xl font-bold tracking-wide">My Tasks</h1>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-400"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-500 transition-all duration-200 ease-in-out"
         >
           Add Task
         </button>
+      </div>
+
+      <div>
+        <hr className="border-gray-700 my-6" />
+        <div className="flex items-center justify-center bg-gray-900 rounded-lg shadow-lg divide-x divide-gray-700">
+          <p
+            onClick={() => setIsSelected(true)} // Example click handler
+            className={`p-4 w-1/2 text-center cursor-pointer transition-all duration-200 ease-in-out ${
+              isSelected
+                ? "bg-blue-600 text-white font-bold shadow-lg rounded-l-lg"
+                : "bg-gray-900 text-gray-400 hover:bg-gray-700 hover:text-white"
+            }`}
+          >
+            My Tasks
+          </p>
+          <p
+            onClick={() => setIsSelected(false)} // Example click handler
+            className={`p-4 w-1/2 text-center cursor-pointer transition-all duration-200 ease-in-out ${
+              !isSelected
+                ? "bg-blue-600 text-white font-bold shadow-lg rounded-r-lg"
+                : "bg-gray-900 text-gray-400 hover:bg-gray-700 hover:text-white"
+            }`}
+          >
+            From Projects
+          </p>
+        </div>
       </div>
 
       {isLoading ? (

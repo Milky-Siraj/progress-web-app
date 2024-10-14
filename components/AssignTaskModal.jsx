@@ -1,11 +1,14 @@
-// AssignTaskModal.jsx
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
+import { fetchSingleCproject } from "@/utils/request";
+
 const AssignTaskModal = ({ closeModal, projectId, members }) => {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
+
+  const [projectName, setProjectName] = useState(""); // Fixed initialization
   const [fields, setFields] = useState({
     assignTo: "",
     task: "",
@@ -15,6 +18,22 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
     dueDate: "",
   });
 
+  useEffect(() => {
+    const getProjectName = async () => {
+      try {
+        const fetchedProjectName = await fetchSingleCproject(projectId); // Use projectId prop
+        const name = fetchedProjectName?.name;
+        setProjectName(name);
+        console.log(fetchedProjectName);
+        console.log(name);
+        console.log(projectName);
+      } catch (error) {
+        console.log("error fetching project names", error);
+      }
+    };
+    getProjectName();
+  }, [projectId]); // Ensure projectId is added as a dependency
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFields((prevFields) => ({
@@ -22,28 +41,30 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
       [name]: value,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const formData = new FormData(e.target);
-
       const res = await fetch(`/api/projects`, {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fields), // Use fields state for form data
       });
+
       if (res.status === 200) {
-        toast.success("task added");
+        toast.success("Task added");
         window.location.reload();
       } else {
-        toast.error("failed to add task");
+        toast.error("Failed to add task");
       }
     } catch (error) {
       console.log(error);
-      toast.error("failed to add task");
+      toast.error("Failed to add task");
     }
 
-    // Notification
     const notification = {
       message: `${userEmail} assigned ${fields.task} to you.`,
       recipientEmail: fields.assignTo,
@@ -59,14 +80,41 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
         },
         body: JSON.stringify(notification),
       });
-      if (res === 200) {
-        console.log("notification added");
+
+      if (res.status === 200) {
+        console.log("Notification added");
       } else {
-        console.log("something went wrong");
+        console.log("Something went wrong");
       }
     } catch (error) {
       console.log(error);
     }
+
+    const fromGroupTask = {
+      task: ` ${fields.task}`,
+      projectName: projectName,
+      userEmail: userEmail,
+      projectId,
+    };
+
+    try {
+      const res = await fetch("/api/fromGroupTask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fromGroupTask),
+      });
+
+      if (res.status === 200) {
+        console.log("fromGroupTask added");
+      } else {
+        console.log("Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     closeModal();
   };
 
@@ -87,11 +135,10 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
             >
               <option value="" disabled>
                 Select a member
-              </option>{" "}
-              {/* Placeholder */}
+              </option>
               {members.map((member) => (
-                <option key={member._id} value={member}>
-                  {member}
+                <option key={member._id} value={member.email}>
+                  {member.name}
                 </option>
               ))}
             </select>
@@ -107,35 +154,27 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
               className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
             />
           </div>
-          <div className="hidden mb-4">
-            <label className="block text-white">Assigned By</label>
-            <input
-              type="text"
-              name="assignedBy"
-              value={fields.assignedBy}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
-            />
-          </div>
+
           <div className="mb-4">
-            <label className="block text-white"> Status </label>
+            <label className="block text-white">Status</label>
             <select
               name="status"
               value={fields.status}
               onChange={handleChange}
               className="bg-transparent"
             >
-              <option className="text-gray-900 " value="open">
+              <option className="text-gray-900" value="open">
                 Open
               </option>
-              <option className="text-gray-900 " value="inProgress">
+              <option className="text-gray-900" value="inProgress">
                 In Progress
               </option>
-              <option className="text-gray-900 " value="closed">
+              <option className="text-gray-900" value="closed">
                 Closed
               </option>
             </select>
           </div>
+
           <div className="mb-4">
             <label className="block text-white">Due Date</label>
             <input
@@ -146,16 +185,7 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
               className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
             />
           </div>
-          <div className="hidden mb-4">
-            <label className="block text-white">project id</label>
-            <input
-              type="text"
-              name="projectId"
-              value={fields.projectId}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
-            />
-          </div>
+
           <div className="flex justify-end">
             <button
               type="button"
