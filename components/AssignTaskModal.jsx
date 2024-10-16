@@ -67,6 +67,31 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
     } catch (error) {
       console.log(error);
     }
+
+    //for group
+    //  const notification = {
+    //    message: `${userEmail} assigned ${fields.task} to you.`,
+    //    recipientEmail: fields.assignTo,
+    //    senderEmail: userEmail,
+    //    projectId,
+    //  };
+
+    //  try {
+    //    const res = await fetch("/api/notification", {
+    //      method: "POST",
+    //      headers: {
+    //        "Content-Type": "application/json",
+    //      },
+    //      body: JSON.stringify(notification),
+    //    });
+    //    if (res === 200) {
+    //      console.log("notification added");
+    //    } else {
+    //      console.log("something went wrong");
+    //    }
+    //  } catch (error) {
+    //    console.log(error);
+    //  }
     closeModal();
   };
 
