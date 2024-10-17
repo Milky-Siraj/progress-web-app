@@ -13,7 +13,7 @@ export const POST = async (req) => {
       userEmail,
       projectId,
     });
-
+    console.log(newFromGroupTask);
     await newFromGroupTask.save();
 
     return new Response(JSON.stringify(newFromGroupTask), { status: 201 });

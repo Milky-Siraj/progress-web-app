@@ -1,11 +1,33 @@
 // AssignTaskModal.jsx
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
+import { fetchSingleCproject } from "@/utils/request";
+
 const AssignTaskModal = ({ closeModal, projectId, members }) => {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
+
+  const [projectName, setProjectName] = useState("");
+
+  useEffect(() => {
+    const getProjectName = async () => {
+      try {
+        const fetchedProjectName = await fetchSingleCproject(projectId); // Use projectId prop
+        const name = fetchedProjectName?.name;
+        setProjectName("hi");
+        console.log(fetchedProjectName);
+        //console.log(name);
+      } catch (error) {
+        console.log("error fetching project names", error);
+      }
+    };
+    getProjectName();
+  }, [projectId]);
+
+  console.log(projectName);
+
   const [fields, setFields] = useState({
     assignTo: "",
     task: "",
@@ -68,30 +90,35 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
       console.log(error);
     }
 
-    //for group
-    //  const notification = {
-    //    message: `${userEmail} assigned ${fields.task} to you.`,
-    //    recipientEmail: fields.assignTo,
-    //    senderEmail: userEmail,
-    //    projectId,
-    //  };
+    const fromGroupTask = {
+      task: `${fields.task} `,
+      projectName: projectName,
+      userEmail: userEmail,
+      projectId,
+    };
 
-    //  try {
-    //    const res = await fetch("/api/notification", {
-    //      method: "POST",
-    //      headers: {
-    //        "Content-Type": "application/json",
-    //      },
-    //      body: JSON.stringify(notification),
-    //    });
-    //    if (res === 200) {
-    //      console.log("notification added");
-    //    } else {
-    //      console.log("something went wrong");
-    //    }
-    //  } catch (error) {
-    //    console.log(error);
-    //  }
+    try {
+      const res = await fetch("/api/fromGroupTask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fromGroupTask),
+      });
+      if (res === 201) {
+        console.log("fromGroupTask added");
+        toast.success("huryyyyyyy");
+      } else {
+        console.log("something went wrong");
+        console.log(userEmail);
+        console.log(res);
+        toast.error("gudddddddd");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("catch error");
+    }
+
     closeModal();
   };
 
