@@ -50,13 +50,13 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
     try {
       const formData = new FormData(e.target);
 
-      const res = await fetch(`/api/projects`, {
+      const resTask = await fetch(`/api/projects`, {
         method: "POST",
         body: formData,
       });
-      if (res.status === 200) {
+      if (resTask.status === 200) {
         toast.success("task added");
-        window.location.reload();
+        //window.location.reload();
       } else {
         toast.error("failed to add task");
       }
@@ -74,14 +74,14 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
     };
 
     try {
-      const res = await fetch("/api/notification", {
+      const resNotification = await fetch("/api/notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(notification),
       });
-      if (res === 200) {
+      if (resNotification === 200) {
         console.log("notification added");
       } else {
         console.log("something went wrong");
@@ -98,20 +98,19 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
     };
 
     try {
-      const res = await fetch("/api/fromGroupTask", {
+      const resFromGroupTask = await fetch("/api/fromGroupTask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(fromGroupTask),
       });
-      if (res === 201) {
+      if (resFromGroupTask === 201) {
         console.log("fromGroupTask added");
         toast.success("huryyyyyyy");
       } else {
         console.log("something went wrong");
-        console.log(userEmail);
-        console.log(res);
+
         toast.error("gudddddddd");
       }
     } catch (error) {
