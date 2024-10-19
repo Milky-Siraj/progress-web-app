@@ -124,7 +124,22 @@ async function fetchNotifications() {
     }
     return res.json();
   } catch (error) {
-    console.error("Error fetching cproject:", error);
+    console.error("Error fetching notification:", error);
+    return [];
+  }
+}
+async function fetchFromGroupTasks() {
+  try {
+    if (!apiDomain) {
+      return [];
+    }
+    const res = await fetch(`${apiDomain}/fromGroupTask`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching formGroupTasks:", error);
     return [];
   }
 }
@@ -137,4 +152,5 @@ export {
   fetchSingleBug,
   fetchSingleCproject,
   fetchNotifications,
+  fetchFromGroupTasks,
 };

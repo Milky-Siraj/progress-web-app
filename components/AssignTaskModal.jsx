@@ -16,7 +16,7 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
       try {
         const fetchedProjectName = await fetchSingleCproject(projectId); // Use projectId prop
         const name = fetchedProjectName?.name;
-        setProjectName("hi");
+        setProjectName(name);
         console.log(fetchedProjectName);
         //console.log(name);
       } catch (error) {
@@ -91,9 +91,9 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
     }
 
     const fromGroupTask = {
-      task: `${fields.task} `,
+      title: `${fields.task} - From : ${projectName} project.`,
       projectName: projectName,
-      userEmail: userEmail,
+      userEmail: fields.assignTo,
       projectId,
     };
 

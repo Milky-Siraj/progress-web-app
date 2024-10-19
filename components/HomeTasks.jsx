@@ -94,7 +94,7 @@ const HomeTasks = () => {
     groupTasks();
 
   return (
-    <div className="bg-gray-800 min-h-screen p-6 text-white">
+    <div className="bg-gray-800 min-h-screen p-6 text-white ">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold tracking-wide">Tasks</h1>
         <button
@@ -131,80 +131,88 @@ const HomeTasks = () => {
         </div>
       </div>
 
-      {isSelected ? (
-        isLoading ? (
-          <h1>Loading tasks...</h1>
-        ) : tasks.length === 0 ? (
-          <h1>No tasks, please add tasks.</h1>
+      <div className="mt-6">
+        {isSelected ? (
+          isLoading ? (
+            <h1>Loading tasks...</h1>
+          ) : tasks.length === 0 ? (
+            <h1>No tasks, please add tasks.</h1>
+          ) : (
+            <div>
+              {/* Today Tasks */}
+              {todayTasks.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mb-2">Today</h2>
+                  {todayTasks.map((task) => (
+                    <TaskListCard
+                      key={task._id}
+                      task={{ ...task, createdAt: formatDate(task.createdAt) }}
+                      onDelete={handleDelete}
+                      isSelected={isSelected}
+                    />
+                  ))}
+                </>
+              )}
+
+              {/* Previous 7 Days Tasks */}
+              {previous7DaysTasks.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mt-6 mb-2">
+                    Previous 7 Days
+                  </h2>
+                  {previous7DaysTasks.map((task) => (
+                    <TaskListCard
+                      key={task._id}
+                      task={{ ...task, createdAt: formatDate(task.createdAt) }}
+                      onDelete={handleDelete}
+                      isSelected={isSelected}
+                    />
+                  ))}
+                </>
+              )}
+
+              {/* Previous 30 Days Tasks */}
+              {previous30DaysTasks.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mt-6 mb-2">
+                    Previous 30 Days
+                  </h2>
+                  {previous30DaysTasks.map((task) => (
+                    <TaskListCard
+                      key={task._id}
+                      task={{ ...task, createdAt: formatDate(task.createdAt) }}
+                      onDelete={handleDelete}
+                      isSelected={isSelected}
+                    />
+                  ))}
+                </>
+              )}
+
+              {/* Older Tasks grouped by month */}
+              {Object.keys(olderTasks).map((monthYear) => (
+                <div key={monthYear}>
+                  <h2 className="text-xl font-semibold mt-6 mb-2">
+                    {monthYear}
+                  </h2>
+                  {olderTasks[monthYear].map((task) => (
+                    <TaskListCard
+                      key={task._id}
+                      task={{ ...task, createdAt: formatDate(task.createdAt) }}
+                      onDelete={handleDelete}
+                      isSelected={isSelected}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          )
         ) : (
+          // Display when 'From Projects' is selected
           <div>
-            {/* Today Tasks */}
-            {todayTasks.length > 0 && (
-              <>
-                <h2 className="text-xl font-semibold mb-2">Today</h2>
-                {todayTasks.map((task) => (
-                  <TaskListCard
-                    key={task._id}
-                    task={{ ...task, createdAt: formatDate(task.createdAt) }}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </>
-            )}
-
-            {/* Previous 7 Days Tasks */}
-            {previous7DaysTasks.length > 0 && (
-              <>
-                <h2 className="text-xl font-semibold mt-6 mb-2">
-                  Previous 7 Days
-                </h2>
-                {previous7DaysTasks.map((task) => (
-                  <TaskListCard
-                    key={task._id}
-                    task={{ ...task, createdAt: formatDate(task.createdAt) }}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </>
-            )}
-
-            {/* Previous 30 Days Tasks */}
-            {previous30DaysTasks.length > 0 && (
-              <>
-                <h2 className="text-xl font-semibold mt-6 mb-2">
-                  Previous 30 Days
-                </h2>
-                {previous30DaysTasks.map((task) => (
-                  <TaskListCard
-                    key={task._id}
-                    task={{ ...task, createdAt: formatDate(task.createdAt) }}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </>
-            )}
-
-            {/* Older Tasks grouped by month */}
-            {Object.keys(olderTasks).map((monthYear) => (
-              <div key={monthYear}>
-                <h2 className="text-xl font-semibold mt-6 mb-2">{monthYear}</h2>
-                {olderTasks[monthYear].map((task) => (
-                  <TaskListCard
-                    key={task._id}
-                    task={{ ...task, createdAt: formatDate(task.createdAt) }}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </div>
-            ))}
+            <FromGroupTask isSelected={isSelected} />
           </div>
-        )
-      ) : (
-        // Display when 'From Projects' is selected
-        <div className="mt-6">
-          <FromGroupTask />
-        </div>
-      )}
+        )}
+      </div>
 
       <TaskModal
         isOpen={isModalOpen}

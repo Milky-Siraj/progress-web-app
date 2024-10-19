@@ -18,7 +18,7 @@ const TaskSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      required: true,
+      default: Date.now,
     },
   },
   { timestamps: true }

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const FromGroupTaskSchema = new mongoose.Schema({
-  task: {
+  title: {
     type: String,
     required: true,
   },
@@ -20,6 +20,11 @@ const FromGroupTaskSchema = new mongoose.Schema({
   projectId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cproject", // Assuming Cproject model exists
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+    required: true,
   },
 });
 

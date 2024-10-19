@@ -29,7 +29,7 @@ export const POST = async (request) => {
 
     const tasksData = {
       title: formData.get("title"),
-      createdAt: new Date().toISOString().split("T")[0], // current date
+
       completed: false,
       owner: userId,
     };

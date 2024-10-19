@@ -5,10 +5,10 @@ import { getSessionUser } from "@/utils/getSessionUser";
 export const POST = async (req) => {
   try {
     await connectDB();
-    const { task, projectName, userEmail, projectId } = await req.json();
+    const { title, projectName, userEmail, projectId } = await req.json();
 
     const newFromGroupTask = new FromGroupTask({
-      task,
+      title,
       projectName,
       userEmail,
       projectId,

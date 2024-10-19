@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-const TaskListCard = ({ task, onDelete }) => {
+const TaskListCard = ({ task, onDelete, isSelected }) => {
   //const router = useRouter();
 
   const taskId = task._id;
@@ -16,16 +16,19 @@ const TaskListCard = ({ task, onDelete }) => {
     const newCompletionState = e.target.checked;
 
     try {
-      const res = await fetch(`/api/tasks`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          taskId, // The ID of the task you're updating
-          isCompleted: newCompletionState, // Pass the updated completion state
-        }),
-      });
+      const res = await fetch(
+        isSelected ? "/api/tasks" : "/api/fromGroupTask",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            taskId, // The ID of the task you're updating
+            isCompleted: newCompletionState, // Pass the updated completion state
+          }),
+        }
+      );
 
       if (res.status === 200) {
         //toast.success("Task updated successfully");
@@ -43,26 +46,22 @@ const TaskListCard = ({ task, onDelete }) => {
     }
   };
 
-  // fetch task data from the form
-  // const fetchTaskData =async()=>{
-  // try{
-  //   const TaskData=await fetchTasks(taskId)
-  // }
-  // }
-
   const handleDeleteTask = async (taskId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this Task?"
     );
     if (!confirmed) return;
     try {
-      const response = await fetch(`/api/tasks`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ taskId }), // Passing taskId in the body
-      });
+      const response = await fetch(
+        isSelected ? "/api/tasks" : "/api/fromGroupTask",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ taskId }), // Passing taskId in the body
+        }
+      );
 
       if (response.ok) {
         console.log("Task deleted successfully");
@@ -76,7 +75,7 @@ const TaskListCard = ({ task, onDelete }) => {
       toast.error("Failed to delete the task");
     }
   };
-
+  console.log(isSelected);
   return (
     <div
       className={`rounded-lg p-4 mb-4 transition-colors duration-300 ${

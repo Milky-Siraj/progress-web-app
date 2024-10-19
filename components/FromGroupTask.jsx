@@ -2,23 +2,20 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import TaskListCard from "@/components/TaskListCard";
-import { fetchTasks } from "@/utils/request";
+import { fetchFromGroupTasks, fetchTasks } from "@/utils/request";
 import { useParams } from "next/navigation";
 
-const FromGroupTask = () => {
+const FromGroupTask = ({ isSelected }) => {
   const { id } = useParams();
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isSelected, setIsSelected] = useState(true); // My Tasks = true, From Projects = false
 
   useEffect(() => {
     const getTasks = async () => {
-      const fetchedTasks = await fetchTasks(id);
+      const fetchedTasks = await fetchFromGroupTasks();
       const parsedTasks = fetchedTasks.map((task) => ({
         ...task,
-        createdAt: new Date(task.createdAt),
+        createdAt: new Date(task.timestamp),
       }));
 
       setTasks(parsedTasks);
@@ -109,6 +106,7 @@ const FromGroupTask = () => {
                   key={task._id}
                   task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
+                  isSelected={isSelected}
                 />
               ))}
             </>
@@ -125,6 +123,7 @@ const FromGroupTask = () => {
                   key={task._id}
                   task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
+                  isSelected={isSelected}
                 />
               ))}
             </>
@@ -141,6 +140,7 @@ const FromGroupTask = () => {
                   key={task._id}
                   task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
+                  isSelected={isSelected}
                 />
               ))}
             </>
@@ -155,6 +155,7 @@ const FromGroupTask = () => {
                   key={task._id}
                   task={{ ...task, createdAt: formatDate(task.createdAt) }}
                   onDelete={handleDelete}
+                  isSelected={isSelected}
                 />
               ))}
             </div>
