@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import profileDefault from "@/assets/profile.png";
 import { useSession } from "next-auth/react";
-import { fetchCProject } from "@/utils/request";
+import { fetchCProject, fetchNotifications } from "@/utils/request";
 import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
@@ -16,6 +16,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const [projectName, setProjectName] = useState([]); // Initialize with an empty array
+  const [notification, setNotification] = useState([]);
 
   useEffect(() => {
     const getProjectNames = async () => {
@@ -30,6 +31,16 @@ const Sidebar = () => {
     getProjectNames();
   }, []); // Empty dependency array means this effect runs only once
 
+  useEffect(() => {
+    const getNotificationCount = async () => {
+      const notificationCount = await fetchNotifications();
+      const unreadNotifications = notificationCount.filter(
+        (notification) => !notification.isRead
+      );
+      setNotification(unreadNotifications);
+    };
+    getNotificationCount();
+  }, []);
   return (
     <div className="w-64 h-full bg-gray-900 text-white flex flex-col justify-between">
       <div className="p-4">
@@ -103,7 +114,7 @@ const Sidebar = () => {
                 <FaBell />
                 <span>Notifications</span>
                 <span className="bg-red-500 text-white rounded-full px-2 text-sm">
-                  1
+                  {notification.length}
                 </span>
               </div>
             </li>

@@ -2,11 +2,10 @@
 import { fetchNotifications } from "@/utils/request";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
-  const [isRead, setIsRead] = useState(true);
+
   useEffect(() => {
     const getNotifications = async () => {
       const notifications = await fetchNotifications();
