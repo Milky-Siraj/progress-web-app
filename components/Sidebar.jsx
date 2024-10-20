@@ -18,6 +18,31 @@ const Sidebar = () => {
   const [projectName, setProjectName] = useState([]); // Initialize with an empty array
   const [notification, setNotification] = useState([]);
 
+  // Poll for unread notifications every 10 seconds
+  useEffect(() => {
+    const getNotificationCount = async () => {
+      try {
+        const notificationCount = await fetchNotifications();
+        const unreadNotifications = notificationCount.filter(
+          (notification) => !notification.isRead
+        );
+        setNotification(unreadNotifications);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    // Fetch notifications immediately when the component mounts
+    getNotificationCount();
+
+    // Set up polling to fetch notifications every 10 seconds
+    const intervalId = setInterval(getNotificationCount, 1000); // 10 seconds
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Fetch project names when the component mounts
   useEffect(() => {
     const getProjectNames = async () => {
       try {
@@ -31,16 +56,6 @@ const Sidebar = () => {
     getProjectNames();
   }, []); // Empty dependency array means this effect runs only once
 
-  useEffect(() => {
-    const getNotificationCount = async () => {
-      const notificationCount = await fetchNotifications();
-      const unreadNotifications = notificationCount.filter(
-        (notification) => !notification.isRead
-      );
-      setNotification(unreadNotifications);
-    };
-    getNotificationCount();
-  }, []);
   return (
     <div className="w-64 h-full bg-gray-900 text-white flex flex-col justify-between">
       <div className="p-4">
@@ -110,12 +125,16 @@ const Sidebar = () => {
           </li>
           <Link href="/pages/notification">
             <li className="mb-2">
-              <div className="flex items-center gap-2">
-                <FaBell />
-                <span>Notifications</span>
-                <span className="bg-red-500 text-white rounded-full px-2 text-sm">
-                  {notification.length}
-                </span>
+              <div className="flex items-center gap-3  rounded-lg  transition duration-200 ease-in-out ">
+                <div className="relative flex items-center">
+                  <FaBell className="text-2xl text-gray-300" />
+                  {notification.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs font-bold text-white bg-red-500 rounded-full border-2 border-gray-800 shadow-md">
+                      {notification.length}
+                    </span>
+                  )}
+                </div>
+                <span className=" text-gray-200 ">Notifications</span>
               </div>
             </li>
           </Link>
