@@ -2,10 +2,11 @@
 import { fetchNotifications } from "@/utils/request";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
-
+  const [isRead, setIsRead] = useState(true);
   useEffect(() => {
     const getNotifications = async () => {
       const notifications = await fetchNotifications();
@@ -13,6 +14,26 @@ const NotificationPage = () => {
     };
     getNotifications();
   }, []);
+  const handleNotificationClick = async (notificationId) => {
+    // Example: Mark notification as read
+    try {
+      const updateIsRead = await fetch(`/api/notifications`, {
+        method: "PUT",
+        body: JSON.stringify({
+          notificationId,
+          isRead: true,
+        }),
+      });
+      if (updateIsRead.ok) {
+        toast.success("read");
+      } else {
+        toast.error("weyyyyy");
+      }
+    } catch (error) {
+      toast.error("catch error");
+      console.log(error);
+    }
+  };
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -36,12 +57,16 @@ const NotificationPage = () => {
             <Link
               key={notification._id} // Moved key to the Link component
               href={`/pages/team/${notification.projectId}`}
+              onClick={() => handleNotificationClick(notification._id)}
             >
-              <li className="bg-gray-700 p-4 m-2 rounded-lg shadow-lg">
+              <li className="relative bg-gray-700 p-4 m-2 rounded-lg shadow-lg">
                 <p>{notification.message}</p>
                 <span className="text-sm text-gray-500">
                   {formatDate(notification.timestamp)}
                 </span>
+                {!notification.isRead && (
+                  <span className="absolute top-2 right-2 h-3 w-3 bg-blue-500 rounded-full"></span>
+                )}
               </li>
             </Link>
           ))}
