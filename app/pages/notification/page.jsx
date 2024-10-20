@@ -17,7 +17,7 @@ const NotificationPage = () => {
   const handleNotificationClick = async (notificationId) => {
     // Example: Mark notification as read
     try {
-      const updateIsRead = await fetch(`/api/notifications`, {
+      const updateIsRead = await fetch(`/api/notification`, {
         method: "PUT",
         body: JSON.stringify({
           notificationId,
@@ -25,12 +25,11 @@ const NotificationPage = () => {
         }),
       });
       if (updateIsRead.ok) {
-        toast.success("read");
+        console.log("read");
       } else {
-        toast.error("weyyyyy");
+        console.log("weyyyyy");
       }
     } catch (error) {
-      toast.error("catch error");
       console.log(error);
     }
   };

@@ -43,5 +43,17 @@ export const POST = async (req) => {
 
 export const PUT = async (req) => {
   try {
-  } catch (error) {}
+    const { notificationId, isRead } = await req.json();
+    const updateIsRead = await Notification.findOneAndUpdate(
+      { _id: notificationId },
+      { $set: { isRead: isRead } },
+      { new: true }
+    );
+    if (!updateIsRead) {
+      return new Response("failed to update", { status: 404 });
+    }
+    return new Response("success", { status: 200 });
+  } catch (error) {
+    return new Response("something went wrong", { status: 500 });
+  }
 };
