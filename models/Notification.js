@@ -21,6 +21,11 @@ const NotificationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cproject", // Assuming Cproject model exists
   },
+  read: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
 });
 
 const Notification =

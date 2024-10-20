@@ -102,6 +102,9 @@ const Sidebar = () => {
               <div className="flex items-center gap-2">
                 <FaBell />
                 <span>Notifications</span>
+                <span className="bg-red-500 text-white rounded-full px-2 text-sm">
+                  1
+                </span>
               </div>
             </li>
           </Link>
