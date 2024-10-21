@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaTasks, FaPlus, FaBell } from "react-icons/fa";
+import { FaTasks, FaPlus, FaBell, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import profileDefault from "@/assets/profile.png";
@@ -36,7 +36,7 @@ const Sidebar = () => {
     getNotificationCount();
 
     // Set up polling to fetch notifications every 10 seconds
-    const intervalId = setInterval(getNotificationCount, 1000); // 10 seconds
+    const intervalId = setInterval(getNotificationCount, 10000); // 10 seconds
 
     // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -98,9 +98,12 @@ const Sidebar = () => {
                   pathname === `/pages/bug/${pname._id}`
                     ? "bg-gray-700"
                     : ""
-                } flex items-center gap-2 cursor-pointer ml-4 mt-3 text-sm text-gray-300 hover:bg-gray-700 rounded-md px-3 py-2`}
+                } flex justify-between gap-2 cursor-pointer ml-4 mt-3 text-sm text-gray-300 hover:bg-gray-700 rounded-md px-3 py-2`}
               >
                 <span>{pname.name}</span>
+                <button className=" text-gray-800 hover:text-red-500">
+                  <FaTrash size={14} />
+                </button>
               </div>
             </Link>
           ))
