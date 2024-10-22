@@ -1,3 +1,4 @@
+// please make this page responsive
 "use client";
 import { useState, useEffect } from "react";
 import { FaTasks, FaPlus, FaBell, FaTrash } from "react-icons/fa";
