@@ -94,7 +94,7 @@ const HomeTasks = () => {
     groupTasks();
 
   return (
-    <div className="bg-gray-800 min-h-screen p-6 text-white ">
+    <div className="bg-gray-800 min-h-screen p-6 pt-20 text-white ">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold tracking-wide">Tasks</h1>
         <button
