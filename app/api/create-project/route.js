@@ -2,6 +2,8 @@ import connectDB from "@/config/database";
 
 import { getSessionUser } from "@/utils/getSessionUser";
 import Cproject from "@/models/Cproject";
+import Project from "@/models/Project";
+import Bug from "@/models/Bug";
 
 // GET /api/create-project
 export const GET = async (request) => {
@@ -80,6 +82,12 @@ export const DELETE = async (req) => {
     const resDelete = await Cproject.findOneAndDelete({
       _id: pId,
       ownerId: userId,
+    });
+    const resDeleteTask = await Project.findOneAndDelete({
+      projectId: pId,
+    });
+    const resDeleteBug = await Bug.findOneAndDelete({
+      projectId: pId,
     });
     if (!resDelete) {
       return new Response("project not found or unauthorized", {
