@@ -67,3 +67,32 @@ export const POST = async (request) => {
     });
   }
 };
+export const DELETE = async (req) => {
+  try {
+    await connectDB();
+    const sessionUser = await getSessionUser();
+    // if (!sessionUser || sessionUser.userId) {
+    //   return new Response("userId is required", { status: 401 });
+    // }
+    const { pId } = await req.json();
+    const { userId } = sessionUser;
+
+    const resDelete = await Cproject.findOneAndDelete({
+      _id: pId,
+      ownerId: userId,
+    });
+    if (!resDelete) {
+      return new Response("project not found or unauthorized", {
+        status: 404,
+      });
+    }
+    return new Response("project deleted successfully", {
+      status: 200,
+    });
+  } catch (error) {
+    console.log(error);
+    return new Response("something went wrong", {
+      status: 500,
+    });
+  }
+};
