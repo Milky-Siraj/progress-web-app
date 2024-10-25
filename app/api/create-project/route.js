@@ -43,24 +43,24 @@ export const POST = async (request) => {
     }
     const { userId } = sessionUser;
     const body = await request.json();
-    const { name, members, showTasks } = body;
+    const { name, showTasks } = body;
     const cprojectData = {
       name: name,
-      members: members,
+
       showTasks: showTasks,
       owner: userId,
     };
-    console.log(members);
+
     const newCProject = new Cproject(cprojectData);
     await newCProject.save();
     console.log(cprojectData);
-    return Response.redirect(`${process.env.NEXTAUTH_URL}/create-team`);
-    // return new Response(
-    //   JSON.stringify({ message: "Project created successfully" }),
-    //   {
-    //     status: 200,
-    //   }
-    // );
+    return new Response(
+      JSON.stringify({
+        message: "Project created successfully",
+        project: newCProject,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
   } catch (error) {
     console.log(error);
     return new Response(JSON.stringify({ message: "failed to add data" }), {

@@ -26,6 +26,16 @@ const NotificationSchema = new mongoose.Schema({
     default: false,
     required: true,
   },
+  accept: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  requests: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
 });
 
 const Notification =

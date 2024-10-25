@@ -1,7 +1,11 @@
 "use client";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
   const [projectName, setProjectName] = useState({
     name: "",
     members: teamMembers,
@@ -10,7 +14,6 @@ const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setProjectName((prevName) => ({
       ...prevName,
       [name]: value,
@@ -24,23 +27,63 @@ const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
   const handleSave = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    const res = await fetch("/api/create-project", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: projectName.name, // Correctly passing project name
-        members: projectName.members, // Members array from state
-        showTasks: showTasks, // Include checkbox state in the request
-      }),
-    });
+    try {
+      const res = await fetch("/api/create-project", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: projectName.name, // Correctly passing project name
+          showTasks: showTasks, // Include checkbox state in the request
+        }),
+      });
 
-    if (res.ok) {
-      console.log("Project created successfully");
-      closeModal(); // Close modal after successful save
-    } else {
-      console.error("Failed to create project");
+      if (res.ok) {
+        const createdProject = await res.json(); // Parse the response to get the project details
+        const projectId = createdProject.project._id; // Store the project ID
+
+        // Send a notification for each team member
+        const notifications = projectName.members.map(async (member) => {
+          const notification = {
+            message: `${userEmail} added you to ${projectName.name} project`,
+            recipientEmail: member,
+            senderEmail: userEmail,
+            requests: true,
+            projectId, // Include projectId in the notification
+          };
+
+          try {
+            const resNotification = await fetch("/api/notification", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(notification),
+            });
+            if (resNotification.ok) {
+              console.log(`Notification sent to ${member}`);
+            } else {
+              console.log(`Failed to send notification to ${member}`);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        });
+
+        await Promise.all(notifications); // Ensure all notifications are sent
+
+        console.log(
+          "Project created successfully with ID:",
+          createdProject.project._id
+        );
+        closeModal(); // Close modal after successful save
+      } else {
+        console.error("Failed to create project");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      //console.log(projectId);
     }
   };
 
@@ -56,14 +99,14 @@ const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
             className="px-4 py-2 rounded-lg bg-gray-600 text-white w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={projectName.name}
             onChange={handleChange}
-            required // Ensure the field is not empty
+            required
           />
           <label className="flex items-center cursor-pointer pb-2">
             <input
               type="checkbox"
-              className="mr-2" // Optional spacing for the checkbox
-              checked={showTasks} // Use the state for checked status
-              onChange={handleCheckboxChange} // Update state on change
+              className="mr-2"
+              checked={showTasks}
+              onChange={handleCheckboxChange}
             />
             <p className="text-gray-200 text-sm">
               Show All Tasks to Team Members

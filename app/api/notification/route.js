@@ -22,13 +22,14 @@ export const GET = async (request) => {
 export const POST = async (req) => {
   try {
     await connectDB();
-    const { message, recipientEmail, senderEmail, projectId } =
+    const { message, recipientEmail, senderEmail, projectId, requests } =
       await req.json();
 
     const newNotification = new Notification({
       message,
       recipientEmail,
       senderEmail,
+      requests,
       projectId,
     });
 
