@@ -72,30 +72,37 @@ export const DELETE = async (req) => {
   try {
     await connectDB();
     const sessionUser = await getSessionUser();
-    // if (!sessionUser || sessionUser.userId) {
-    //   return new Response("userId is required", { status: 401 });
-    // }
     const { pId } = await req.json();
     const { userId } = sessionUser;
 
+    // Delete the project owned by the user with the specified project ID
     const resDelete = await Cproject.findOneAndDelete({
       _id: pId,
       ownerId: userId,
     });
-    const resDeleteTask = await Project.findOneAndDelete({
+
+    // Delete all tasks associated with the project ID
+    const resDeleteTask = await Project.deleteMany({
       projectId: pId,
     });
-    const resDeleteBug = await Bug.findOneAndDelete({
+
+    // Delete all bugs associated with the project ID
+    const resDeleteBug = await Bug.deleteMany({
       projectId: pId,
     });
+
     if (!resDelete) {
       return new Response("project not found or unauthorized", {
         status: 404,
       });
     }
-    return new Response("project deleted successfully", {
-      status: 200,
-    });
+
+    return new Response(
+      "project and associated tasks and bugs deleted successfully",
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log(error);
     return new Response("something went wrong", {
