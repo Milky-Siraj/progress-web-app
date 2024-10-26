@@ -44,10 +44,10 @@ export const POST = async (req) => {
 
 export const PUT = async (req) => {
   try {
-    const { notificationId, isRead } = await req.json();
+    const { notificationId, isRead, accept } = await req.json();
     const updateIsRead = await Notification.findOneAndUpdate(
       { _id: notificationId },
-      { $set: { isRead: isRead } },
+      { $set: { isRead: isRead, accept: accept } },
       { new: true }
     );
     if (!updateIsRead) {

@@ -1,8 +1,9 @@
 "use client";
-import { fetchNotifications } from "@/utils/request";
+import { fetchNotifications, fetchSingleCproject } from "@/utils/request";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { FaCheck } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const NotificationPage = () => {
@@ -35,26 +36,50 @@ const NotificationPage = () => {
       console.log(error);
     }
   };
-  const handleAccept = async (projectId) => {
+  const handleAccept = async (projectId, notificationId) => {
     try {
-      // If email is a single email, wrap it in an array
+      // Fetch existing project members
+      const fetchedProjectMembers = await fetchSingleCproject(projectId);
+      const fetchedMembers = fetchedProjectMembers?.members || [];
+
+      // Ensure `email` is an array
       const membersToAdd = Array.isArray(email) ? email : [email];
 
-      const res = await fetch(`/api/add-members/${projectId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ members: membersToAdd }), // Send as an array
-      });
+      // Filter out emails that are already in fetchedMembers
+      const newMembers = membersToAdd.filter(
+        (email) => !fetchedMembers.includes(email)
+      );
 
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Members added successfully:", data);
-        toast.success("Added successfully");
+      // Check if there are any new members to add
+      if (newMembers.length > 0) {
+        const res = await fetch(`/api/add-members/${projectId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ members: newMembers }), // Send only new members
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Members added successfully:", data);
+          toast.success("Added successfully");
+        } else {
+          console.log("Failed to add members");
+          toast.error("Failed to add members");
+        }
       } else {
-        console.log("Failed to add members");
-        toast.error("Failed to add members");
+        toast.error("Already a member");
+      }
+
+      const resUpdate = await fetch("/api/notification", {
+        method: "PUT",
+        body: JSON.stringify({ notificationId, accept: true }),
+      });
+      if (resUpdate.ok) {
+        toast.success("updated accept");
+      } else {
+        toast.error("failed to update");
       }
     } catch (error) {
       console.error("Error adding members:", error);
@@ -98,17 +123,23 @@ const NotificationPage = () => {
                 {!notification.isRead && (
                   <span className="absolute top-2 right-2 h-3 w-3 bg-blue-500 rounded-full"></span>
                 )}
-                {notification.requests && (
-                  <div className="flex justify-end space-x-4 mt-4">
+                {notification.requests && !notification.accept && (
+                  <div className="flex justify-end space-x-4 mt-6">
                     <button
-                      className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transform transition duration-200 ease-in-out hover:scale-105 hover:shadow-lg"
+                      className="bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2.5 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
                       onClick={(e) => {
                         e.preventDefault();
-                        handleAccept(notification.projectId);
+                        handleAccept(notification.projectId, notification._id);
                       }}
                     >
                       Accept
                     </button>
+                  </div>
+                )}
+                {notification.accept && (
+                  <div className="flex items-center justify-end text-green-600 font-semibold mt-4 space-x-2">
+                    <FaCheck className="text-xl" />
+                    <p>Accepted</p>
                   </div>
                 )}
               </li>
