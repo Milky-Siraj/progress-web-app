@@ -112,7 +112,7 @@ const Project = () => {
       <div className="flex-1 p-6 bg-gray-800 text-white min-h-screen">
         <div className="flex justify-end mb-4">
           <button
-            className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
             onClick={() => setIsModalOpen(true)}
           >
             Assign Task
