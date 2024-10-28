@@ -78,6 +78,10 @@ const Sidebar = () => {
 
       if (responseDelete.status == 200) {
         toast.success("project deleted successfully");
+        const updatedProjectNames = projectName.filter(
+          (project) => project._id !== pId
+        );
+        setProjectName(updatedProjectNames);
       } else {
         toast.error("failed to delete project");
       }

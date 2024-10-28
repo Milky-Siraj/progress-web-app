@@ -27,7 +27,7 @@ const LoginPage = () => {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300">
       {/* Left Section */}
-      <div className="flex flex-col w-full lg:w-1/2 xl:w-1/3 bg-gray-900  shadow-xl justify-center items-center p-8 md:p-10 min-h-screen lg:min-h-0 mx-auto lg:mx-0">
+      <div className="flex flex-col w-full lg:w-1/2 xl:w-1/3 bg-gray-900  shadow-xl justify-center items-center p-8 md:p-10 min-h-screen lg:min-h-0 mx-auto lg:mx-0 border border-blue-700">
         <div className="flex items-center space-x-3 md:space-x-4 mb-6 md:mb-8">
           <img
             src="/images/logo3.png"
@@ -65,7 +65,7 @@ const LoginPage = () => {
 
       {/* Right Section - hidden on smaller screens */}
       <div
-        className="hidden lg:flex w-1/2 xl:w-2/3 justify-center items-center bg-cover bg-center bg-blue-600 bg-opacity-80"
+        className="hidden lg:flex w-1/2 xl:w-2/3 justify-center items-center bg-cover bg-center bg-blue-600 bg-opacity-80  "
         style={{
           backgroundImage: `url('/images/bg.png')`,
           minHeight: "50vh",
