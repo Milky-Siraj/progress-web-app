@@ -48,6 +48,23 @@ async function fetchCProject() {
     return []; // Return an empty array in case of an error
   }
 }
+async function fetchCProjectCreated() {
+  try {
+    if (!apiDomain) {
+      console.log("this is the error");
+      return [];
+    }
+    const res = await fetch(`${apiDomain}/create-project/created`);
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return []; // Return an empty array in case of an error
+  }
+}
 async function fetchBug(id) {
   try {
     if (!apiDomain) {
@@ -153,4 +170,5 @@ export {
   fetchSingleCproject,
   fetchNotifications,
   fetchFromGroupTasks,
+  fetchCProjectCreated,
 };

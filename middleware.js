@@ -5,5 +5,7 @@ export const config = {
     "/pages/team",
     "/create-team",
     "/pages/profile",
+    "/pages/notification",
+    "/pages/bug",
   ],
 };
