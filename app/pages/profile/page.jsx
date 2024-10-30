@@ -144,7 +144,7 @@ const ProfilePage = () => {
                 >
                   <Link href={`/pages/team/${pname._id}`}>
                     <div className="cursor-pointer text-gray-300">
-                      {pname.name}
+                      <span className="text-blue-500 pr-1">•</span> {pname.name}
                     </div>
                   </Link>
                   <button

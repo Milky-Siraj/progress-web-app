@@ -64,32 +64,32 @@ const Sidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleProjectDelete = async (pId) => {
-    try {
-      const confirm = window.confirm(
-        "Are you sure you want to delete this project? Notice all the tasks are going to be lost"
-      );
-      if (!confirm) return;
+  // const handleProjectDelete = async (pId) => {
+  //   try {
+  //     const confirm = window.confirm(
+  //       "Are you sure you want to delete this project? Notice all the tasks are going to be lost"
+  //     );
+  //     if (!confirm) return;
 
-      const responseDelete = await fetch("/api/create-project", {
-        method: "DELETE",
-        body: JSON.stringify({ pId }),
-      });
+  //     const responseDelete = await fetch("/api/create-project", {
+  //       method: "DELETE",
+  //       body: JSON.stringify({ pId }),
+  //     });
 
-      if (responseDelete.status == 200) {
-        toast.success("project deleted successfully");
-        const updatedProjectNames = projectName.filter(
-          (project) => project._id !== pId
-        );
-        setProjectName(updatedProjectNames);
-      } else {
-        toast.error("failed to delete project");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("failed to delete project");
-    }
-  };
+  //     if (responseDelete.status == 200) {
+  //       toast.success("project deleted successfully");
+  //       const updatedProjectNames = projectName.filter(
+  //         (project) => project._id !== pId
+  //       );
+  //       setProjectName(updatedProjectNames);
+  //     } else {
+  //       toast.error("failed to delete project");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("failed to delete project");
+  //   }
+  // };
   return (
     <>
       <div className="fixed top-4 left-4 z-50 md:hidden">
@@ -152,12 +152,12 @@ const Sidebar = () => {
                   } flex justify-between gap-2 cursor-pointer ml-4 mt-3 text-sm text-gray-300 hover:bg-gray-800 rounded-lg px-3 py-2 transition-colors duration-200 ease-in-out`}
                 >
                   <span>{pname.name}</span>
-                  <button
+                  {/* <button
                     className=" text-gray-500 hover:text-red-500"
                     onClick={() => handleProjectDelete(pname._id)}
                   >
                     <FaTrash size={14} />
-                  </button>
+                  </button> */}
                 </div>
               </Link>
             ))
