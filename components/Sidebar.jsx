@@ -1,4 +1,3 @@
-// for streak
 "use client";
 import { useState, useEffect } from "react";
 import { FaTasks, FaPlus, FaBell, FaTrash, FaBars } from "react-icons/fa";
@@ -8,7 +7,6 @@ import profileDefault from "@/assets/profile.png";
 import { useSession } from "next-auth/react";
 import { fetchCProject, fetchNotifications } from "@/utils/request";
 import { usePathname } from "next/navigation";
-import { toast } from "react-toastify";
 
 const Sidebar = () => {
   const { data: session } = useSession();
