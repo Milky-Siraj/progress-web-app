@@ -2,6 +2,8 @@ import connectDB from "@/config/database";
 import { getSessionUser } from "@/utils/getSessionUser";
 import Cproject from "@/models/Cproject";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (request) => {
   try {
     await connectDB();
