@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { FaSearch } from "react-icons/fa";
 import EnterTeamNameModal from "@/components/EnterTeamNameModal";
 import { useRouter } from "next/navigation";
@@ -63,62 +63,61 @@ const CreateProjectPage = () => {
   const teamMemberEmails = teamMembers.map((member) => member.email);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white">
-      <h1 className="text-3xl pb-10 font-bold">Add Members</h1>
-      <div className="flex flex-row justify-center items-center mb-8 gap-4 w-2/3">
-        <form
-          onSubmit={handleSearch}
-          className="flex gap-4 items-center w-full"
-        >
-          <input
-            type="text"
-            id="searchTerm"
-            placeholder="Search for a member by email address..."
-            className="px-4 py-3 rounded-lg bg-gray-700 text-white w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            onClick={handleSearch}
-            className="px-5 py-3 rounded-lg bg-blue-500 text-white hover:bg-blue-400 shadow-md flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white">
+        <h1 className="text-3xl pb-10 font-bold">Add Members</h1>
+        <div className="flex flex-row justify-center items-center mb-8 gap-4 w-2/3">
+          <form
+            onSubmit={handleSearch}
+            className="flex gap-4 items-center w-full"
           >
-            <FaSearch />
-            Search
-          </button>
-        </form>
+            <input
+              type="text"
+              id="searchTerm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search members by email"
+              className="p-2 rounded-md"
+            />
+            <button
+              type="submit"
+              className="flex items-center bg-blue-500 p-2 rounded-md"
+            >
+              <FaSearch />
+            </button>
+          </form>
+        </div>
+
+        <div className="w-2/3 bg-gray-700 p-4 rounded-md">
+          {teamMembers.length > 0 ? (
+            <ul>
+              {teamMembers.map((member, index) => (
+                <li key={member._id} className="flex justify-between mb-2">
+                  <span>{member.email}</span>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No members found</p>
+          )}
+        </div>
+
+        <button
+          onClick={handleDone}
+          className="mt-6 bg-green-500 p-2 rounded-md"
+        >
+          Done
+        </button>
       </div>
 
-      <ul className="w-2/3 mt-4">
-        {teamMembers.map((member, index) => (
-          <li
-            key={index}
-            className="flex justify-between items-center mb-2 bg-gray-700 px-4 py-2 rounded-lg"
-          >
-            <span>{member.username}</span>
-            <button
-              className="text-red-500"
-              onClick={() => handleDelete(index)}
-            >
-              X
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <button
-        onClick={handleDone}
-        className="mt-8 px-5 py-3 rounded-lg bg-green-500 text-white hover:bg-green-400 shadow-md focus:outline-none focus:ring-2 focus:ring-green-500"
-      >
-        Create Project
-      </button>
-
-      {isModalOpen && (
-        <EnterTeamNameModal
-          closeModal={() => setIsModalOpen(false)}
-          teamMembers={teamMemberEmails}
-        />
-      )}
-    </div>
+      {isModalOpen && <EnterTeamNameModal />}
+    </Suspense>
   );
 };
 
