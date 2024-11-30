@@ -1,3 +1,4 @@
+"use client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
