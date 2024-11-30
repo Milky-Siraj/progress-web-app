@@ -3,6 +3,7 @@ import connectDB from "@/config/database";
 import { getSessionUser } from "@/utils/getSessionUser";
 import Task from "@/models/Task";
 
+export const dynamic = "force-dynamic";
 // GET /api/task/:id
 export const GET = async (request) => {
   try {

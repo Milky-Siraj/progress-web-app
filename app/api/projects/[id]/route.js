@@ -4,6 +4,7 @@ import { getSessionUser } from "@/utils/getSessionUser";
 import Project from "@/models/Project";
 import Cproject from "@/models/Cproject";
 
+export const dynamic = "force-dynamic";
 // GET /api/projects/id
 export const GET = async (request, { params }) => {
   try {

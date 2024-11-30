@@ -3,6 +3,7 @@ import connectDB from "@/config/database";
 import Bug from "@/models/Bug";
 import { getSessionUser } from "@/utils/getSessionUser";
 
+export const dynamic = "force-dynamic";
 // to fetch single task from bug page
 export const GET = async (request, { params }) => {
   try {

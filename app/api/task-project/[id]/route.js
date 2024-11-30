@@ -3,6 +3,7 @@ import connectDB from "@/config/database";
 import Project from "@/models/Project";
 import { getSessionUser } from "@/utils/getSessionUser";
 
+export const dynamic = "force-dynamic";
 // to fetch single task from project page
 export const GET = async (request, { params }) => {
   try {

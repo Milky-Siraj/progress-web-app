@@ -2,6 +2,7 @@ import connectDB from "@/config/database";
 
 import Bug from "@/models/Bug";
 
+export const dynamic = "force-dynamic";
 // GET /api/projects/id
 export const GET = async (request, { params }) => {
   try {

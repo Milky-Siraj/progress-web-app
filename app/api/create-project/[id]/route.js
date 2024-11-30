@@ -1,6 +1,7 @@
 import connectDB from "@/config/database";
 import Cproject from "@/models/Cproject";
 
+export const dynamic = "force-dynamic";
 export const GET = async (request, { params }) => {
   try {
     await connectDB();

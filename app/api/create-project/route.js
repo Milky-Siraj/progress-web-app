@@ -4,6 +4,7 @@ import Cproject from "@/models/Cproject";
 import Project from "@/models/Project";
 import Bug from "@/models/Bug";
 
+export const dynamic = "force-dynamic";
 // GET /api/create-project
 export const GET = async (request) => {
   try {
