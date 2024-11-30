@@ -6,59 +6,59 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
 const CreateProjectPage = () => {
-  // const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
   const [teamMembers, setTeamMembers] = useState([]);
 
-  // const searchEmail = searchParams.get("searchTerm");
+  const searchEmail = searchParams.get("searchTerm");
 
-  // useEffect(() => {
-  //   const fetchSearchResults = async () => {
-  //     try {
-  //       const res = await fetch(
-  //         `/api/create-project/search?searchTerm=${searchEmail}`
-  //       );
-  //       if (res.status === 200) {
-  //         const data = await res.json();
-  //         const filteredData = data.filter(
-  //           (newMember) =>
-  //             !teamMembers.some((member) => member._id === newMember._id)
-  //         );
-  //         setTeamMembers((prevMembers) => [...prevMembers, ...filteredData]);
-  //       } else {
-  //         setTeamMembers([]);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchSearchResults();
-  // }, [searchEmail]);
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      try {
+        const res = await fetch(
+          `/api/create-project/search?searchTerm=${searchEmail}`
+        );
+        if (res.status === 200) {
+          const data = await res.json();
+          const filteredData = data.filter(
+            (newMember) =>
+              !teamMembers.some((member) => member._id === newMember._id)
+          );
+          setTeamMembers((prevMembers) => [...prevMembers, ...filteredData]);
+        } else {
+          setTeamMembers([]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSearchResults();
+  }, [searchEmail]);
 
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // const router = useRouter();
+  const router = useRouter();
 
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   if (searchTerm === "") {
-  //     router.push("/create-team");
-  //   } else {
-  //     const query = `?searchTerm=${searchTerm}`;
-  //     router.push(`/create-team${query}`);
-  //   }
-  // };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm === "") {
+      router.push("/create-team");
+    } else {
+      const query = `?searchTerm=${searchTerm}`;
+      router.push(`/create-team${query}`);
+    }
+  };
 
-  // const handleDelete = (index) => {
-  //   const updatedMembers = [...teamMembers];
-  //   updatedMembers.splice(index, 1);
-  //   setTeamMembers(updatedMembers);
-  // };
+  const handleDelete = (index) => {
+    const updatedMembers = [...teamMembers];
+    updatedMembers.splice(index, 1);
+    setTeamMembers(updatedMembers);
+  };
 
-  // const handleDone = () => {
-  //   setIsModalOpen(true); // Open the modal when "Done" is clicked
-  // };
+  const handleDone = () => {
+    setIsModalOpen(true); // Open the modal when "Done" is clicked
+  };
 
   const teamMemberEmails = teamMembers.map((member) => member.email);
 
@@ -67,7 +67,7 @@ const CreateProjectPage = () => {
       <h1 className="text-3xl pb-10 font-bold">Add Members</h1>
       <div className="flex flex-row justify-center items-center mb-8 gap-4 w-2/3">
         <form
-          //onSubmit={handleSearch}
+          onSubmit={handleSearch}
           className="flex gap-4 items-center w-full"
         >
           <input
@@ -75,11 +75,11 @@ const CreateProjectPage = () => {
             id="searchTerm"
             placeholder="Search for a member by email address..."
             className="px-4 py-3 rounded-lg bg-gray-700 text-white w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            //value={searchTerm}
+            value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button
-            // onClick={handleSearch}
+            onClick={handleSearch}
             className="px-5 py-3 rounded-lg bg-blue-500 text-white hover:bg-blue-400 shadow-md flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <FaSearch />
@@ -106,18 +106,18 @@ const CreateProjectPage = () => {
       </ul>
 
       <button
-        // onClick={handleDone}
+        onClick={handleDone}
         className="mt-8 px-5 py-3 rounded-lg bg-green-500 text-white hover:bg-green-400 shadow-md focus:outline-none focus:ring-2 focus:ring-green-500"
       >
         Create Project
       </button>
 
-      {/* {isModalOpen && (
+      {isModalOpen && (
         <EnterTeamNameModal
           closeModal={() => setIsModalOpen(false)}
           teamMembers={teamMemberEmails}
         />
-      )} */}
+      )}
     </div>
   );
 };
