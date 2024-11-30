@@ -1,7 +1,8 @@
-// app/create-team/page.jsx
-"use client";
-import CreateTeamPage from "@/components/CreateTeamPage";
+import CreateProjectPage from "@/components/CreateTeamPage";
+import React from "react";
 
-export default function Page() {
-  return <CreateTeamPage />;
-}
+const CreateTeam = () => {
+  return <CreateProjectPage />;
+};
+
+export default CreateTeam;
