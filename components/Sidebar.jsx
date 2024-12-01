@@ -109,7 +109,10 @@ const Sidebar = () => {
         <div className="pr-6 pl-6">
           <ul>
             <li className="mb-4">
-              <Link href={`/pages/hometasks/${userId}`} onClick={toggleSidebar}>
+              <Link
+                href={`/pages/hometasks/${userId}`}
+                onClick={() => setIsSidebarOpen(false)}
+              >
                 <div className="flex items-center gap-3  rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <FaTasks className="text-lg" />
                   <span className="text-sm font-medium">My Tasks</span>
@@ -118,7 +121,7 @@ const Sidebar = () => {
             </li>
 
             <li className="mb-4">
-              <Link href="/create-team" onClick={toggleSidebar}>
+              <Link href="/create-team" onClick={() => setIsSidebarOpen(false)}>
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <FaPlus className="text-lg" />
                   <span className="text-sm font-medium">Create Project</span>
@@ -143,7 +146,7 @@ const Sidebar = () => {
               <Link
                 key={pname._id}
                 href={`/pages/team/${pname._id}`}
-                onClick={toggleSidebar}
+                onClick={() => setIsSidebarOpen(false)}
               >
                 <div
                   className={`${
@@ -168,7 +171,10 @@ const Sidebar = () => {
         <div className="pr-6 pl-6">
           <ul>
             <li className="mb-4">
-              <Link href="/pages/profile" onClick={toggleSidebar}>
+              <Link
+                href="/pages/profile"
+                onClick={() => setIsSidebarOpen(false)}
+              >
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <Image
                     className="h-6 w-6 rounded-full"
@@ -181,7 +187,10 @@ const Sidebar = () => {
                 </div>
               </Link>
             </li>
-            <Link href="/pages/notification" onClick={toggleSidebar}>
+            <Link
+              href="/pages/notification"
+              onClick={() => setIsSidebarOpen(false)}
+            >
               <li className="mb-4">
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <div className="relative flex items-center">
