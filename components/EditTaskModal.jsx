@@ -1,4 +1,3 @@
-// EditTaskModal.jsx
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { fetchSingleProject } from "@/utils/request";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 const EditTaskModal = ({ closeModal, taskId }) => {
   const { id } = useParams();
@@ -24,8 +22,6 @@ const EditTaskModal = ({ closeModal, taskId }) => {
     dueDate: "",
   });
 
-  //const [loading, setLoading] = useState(true);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFields((prevFields) => ({
@@ -34,12 +30,13 @@ const EditTaskModal = ({ closeModal, taskId }) => {
     }));
     console.log(taskId);
   };
+
   useEffect(() => {
     setMounted(true);
     const fetchTaskData = async () => {
       try {
         const fetchedData = await fetchSingleProject(taskId);
-        const isoDate = fetchedData.dueDate; // Your date in ISO format
+        const isoDate = fetchedData.dueDate;
         const formattedDate = isoDate.split("T")[0];
         fetchedData.dueDate = formattedDate;
         setFields(fetchedData);
@@ -50,9 +47,7 @@ const EditTaskModal = ({ closeModal, taskId }) => {
 
     fetchTaskData();
   }, [taskId, userName]);
-  console.log("taskId:", taskId);
-  console.log("Project id from params:", id);
-  console.log("Navigating to:", `/pages/team/${id}`);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -79,8 +74,8 @@ const EditTaskModal = ({ closeModal, taskId }) => {
 
   return (
     mounted && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-gray-700 p-6 rounded-lg w-1/3">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 sm:p-8">
+        <div className="bg-gray-700 p-6 rounded-lg w-full max-w-lg">
           <h2 className="text-2xl font-bold text-white mb-4">Edit</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -104,6 +99,7 @@ const EditTaskModal = ({ closeModal, taskId }) => {
                 className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
               />
             </div>
+
             <div className="hidden mb-4">
               <label className="block text-white">Assigned By</label>
               <input
@@ -114,25 +110,27 @@ const EditTaskModal = ({ closeModal, taskId }) => {
                 className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
               />
             </div>
+
             <div className="mb-4">
-              <label className="block text-white"> Status </label>
+              <label className="block text-white">Status</label>
               <select
                 name="status"
                 value={fields.status}
                 onChange={handleChange}
-                className="bg-transparent"
+                className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
               >
-                <option className="text-gray-900 " value="open">
+                <option className="text-gray-900" value="open">
                   Open
                 </option>
-                <option className="text-gray-900 " value="inProgress">
+                <option className="text-gray-900" value="inProgress">
                   In Progress
                 </option>
-                <option className="text-gray-900 " value="closed">
+                <option className="text-gray-900" value="closed">
                   Closed
                 </option>
               </select>
             </div>
+
             <div className="mb-4">
               <label className="block text-white">Due Date</label>
               <input
@@ -144,10 +142,10 @@ const EditTaskModal = ({ closeModal, taskId }) => {
               />
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex flex-wrap justify-end gap-4">
               <button
                 type="button"
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mr-2"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
                 onClick={closeModal}
               >
                 Cancel
