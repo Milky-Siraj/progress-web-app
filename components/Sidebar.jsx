@@ -109,7 +109,7 @@ const Sidebar = () => {
         <div className="pr-6 pl-6">
           <ul>
             <li className="mb-4">
-              <Link href={`/pages/hometasks/${userId}`}>
+              <Link href={`/pages/hometasks/${userId}`} onClick={toggleSidebar}>
                 <div className="flex items-center gap-3  rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <FaTasks className="text-lg" />
                   <span className="text-sm font-medium">My Tasks</span>
@@ -118,7 +118,7 @@ const Sidebar = () => {
             </li>
 
             <li className="mb-4">
-              <Link href="/create-team">
+              <Link href="/create-team" onClick={toggleSidebar}>
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <FaPlus className="text-lg" />
                   <span className="text-sm font-medium">Create Project</span>
@@ -140,7 +140,11 @@ const Sidebar = () => {
             </div>
           ) : (
             projectName.map((pname) => (
-              <Link key={pname._id} href={`/pages/team/${pname._id}`}>
+              <Link
+                key={pname._id}
+                href={`/pages/team/${pname._id}`}
+                onClick={toggleSidebar}
+              >
                 <div
                   className={`${
                     pathname === `/pages/team/${pname._id}` ||
@@ -164,7 +168,7 @@ const Sidebar = () => {
         <div className="pr-6 pl-6">
           <ul>
             <li className="mb-4">
-              <Link href="/pages/profile">
+              <Link href="/pages/profile" onClick={toggleSidebar}>
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <Image
                     className="h-6 w-6 rounded-full"
@@ -177,7 +181,7 @@ const Sidebar = () => {
                 </div>
               </Link>
             </li>
-            <Link href="/pages/notification">
+            <Link href="/pages/notification" onClick={toggleSidebar}>
               <li className="mb-4">
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <div className="relative flex items-center">
