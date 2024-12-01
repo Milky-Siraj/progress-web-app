@@ -1,3 +1,4 @@
+// AssignTaskModal.jsx
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -13,21 +14,26 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
   useEffect(() => {
     const getProjectName = async () => {
       try {
-        const fetchedProjectName = await fetchSingleCproject(projectId);
-        setProjectName(fetchedProjectName?.name || "Unknown Project");
+        const fetchedProjectName = await fetchSingleCproject(projectId); // Use projectId prop
+        const name = fetchedProjectName?.name;
+        setProjectName(name);
+        console.log(fetchedProjectName);
+        //console.log(name);
       } catch (error) {
-        console.error("Error fetching project name:", error);
+        console.log("error fetching project names", error);
       }
     };
     getProjectName();
   }, [projectId]);
+
+  console.log(projectName);
 
   const [fields, setFields] = useState({
     assignTo: "",
     task: "",
     assignedBy: userEmail,
     status: "open",
-    projectId,
+    projectId: projectId, // Use the projectId passed as a prop
     dueDate: "",
   });
 
@@ -38,37 +44,81 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
       [name]: value,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const formData = new FormData(e.target);
+
       const resTask = await fetch(`/api/projects`, {
         method: "POST",
         body: formData,
       });
-      resTask.status === 200
-        ? toast.success("Task assigned successfully")
-        : toast.error("Failed to assign task");
+      if (resTask.status === 200) {
+        toast.success("task added");
+        //window.location.reload();
+      } else {
+        toast.error("failed to add task");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("failed to add task");
+    }
 
-      // Notification logic
-      const notification = {
-        message: `${userEmail} assigned ${fields.task} to you.`,
-        recipientEmail: fields.assignTo,
-        senderEmail: userEmail,
-        projectId,
-      };
-      await fetch("/api/notification", {
+    // Notification
+    const notification = {
+      message: `${userEmail} assigned ${fields.task} to you.`,
+      recipientEmail: fields.assignTo,
+      senderEmail: userEmail,
+      projectId,
+    };
+
+    try {
+      const resNotification = await fetch("/api/notification", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(notification),
       });
-
-      closeModal();
+      if (resNotification === 200) {
+        console.log("notification added");
+      } else {
+        console.log("something went wrong");
+      }
     } catch (error) {
-      console.error("Error assigning task:", error);
-      toast.error("An error occurred.");
+      console.log(error);
     }
+
+    const fromGroupTask = {
+      title: `${fields.task} - From : ${projectName} project.`,
+      projectName: projectName,
+      userEmail: fields.assignTo,
+      projectId,
+    };
+
+    try {
+      const resFromGroupTask = await fetch("/api/fromGroupTask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fromGroupTask),
+      });
+      if (resFromGroupTask === 201) {
+        console.log("fromGroupTask added");
+        toast.success("huryyyyyyy");
+      } else {
+        console.log("something went wrong");
+
+        toast.error("gudddddddd");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("catch error");
+    }
+
+    closeModal();
   };
 
   return (
@@ -79,18 +129,19 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-white mb-2">Assign To</label>
+            <label className="block text-white">Assign To</label>
             <select
               id="assignTo"
               name="assignTo"
-              className="w-full border rounded-lg bg-gray-600 text-white py-2 px-3"
+              className="border rounded w-full py-2 px-3 bg-gray-600 text-white"
+              required
               value={fields.assignTo}
               onChange={handleChange}
-              required
             >
               <option value="" disabled>
                 Select a member
-              </option>
+              </option>{" "}
+              {/* Placeholder */}
               {members.map((member) => (
                 <option key={member._id} value={member}>
                   {member}
@@ -100,55 +151,75 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-white mb-2">Task</label>
+            <label className="block text-white">Task</label>
             <input
               type="text"
               name="task"
               value={fields.task}
               onChange={handleChange}
               className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
-              placeholder="Enter task"
-              required
             />
           </div>
-
+          <div className="hidden mb-4">
+            <label className="block text-white">Assigned By</label>
+            <input
+              type="text"
+              name="assignedBy"
+              value={fields.assignedBy}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
+            />
+          </div>
           <div className="mb-4">
-            <label className="block text-white mb-2">Status</label>
+            <label className="block text-white"> Status </label>
             <select
               name="status"
               value={fields.status}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
+              className="bg-transparent"
             >
-              <option value="open">Open</option>
-              <option value="inProgress">In Progress</option>
-              <option value="closed">Closed</option>
+              <option className="text-gray-900 " value="open">
+                Open
+              </option>
+              <option className="text-gray-900 " value="inProgress">
+                In Progress
+              </option>
+              <option className="text-gray-900 " value="closed">
+                Closed
+              </option>
             </select>
           </div>
-
           <div className="mb-4">
-            <label className="block text-white mb-2">Due Date</label>
+            <label className="block text-white">Due Date</label>
             <input
               type="date"
               name="dueDate"
               value={fields.dueDate}
               onChange={handleChange}
               className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
-              required
             />
           </div>
-
-          <div className="flex justify-end gap-4">
+          <div className="hidden mb-4">
+            <label className="block text-white">project id</label>
+            <input
+              type="text"
+              name="projectId"
+              value={fields.projectId}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white"
+            />
+          </div>
+          <div className="flex justify-end">
             <button
               type="button"
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+              className="bg-red-500 text-white px-4 py-2 rounded-lg mr-2"
               onClick={closeModal}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+              className="bg-green-500 text-white px-4 py-2 rounded-lg"
             >
               Assign
             </button>

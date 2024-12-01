@@ -115,7 +115,7 @@ const NotificationPage = () => {
               }
               onClick={() => handleNotificationClick(notification._id)}
             >
-              <li className=" bg-gray-700 p-4 m-2 rounded-lg shadow-lg">
+              <li className="relative bg-gray-700 p-4 m-2 rounded-lg shadow-lg">
                 <p>{notification.message}</p>
                 <span className="text-sm text-gray-500">
                   {formatDate(notification.timestamp)}
