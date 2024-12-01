@@ -102,9 +102,9 @@ const NotificationPage = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Notifications</h1>
+      <h1 className="text-2xl font-bold mt-11 ml-5 mb-4">Notifications</h1>
       {notifications.length > 0 ? (
-        <ul className="space-y-4">
+        <ul className="">
           {notifications.map((notification) => (
             <Link
               key={notification._id} // Moved key to the Link component
@@ -115,7 +115,7 @@ const NotificationPage = () => {
               }
               onClick={() => handleNotificationClick(notification._id)}
             >
-              <li className="relative bg-gray-700 p-4 m-2 rounded-lg shadow-lg">
+              <li className=" bg-gray-700 p-4 m-2 rounded-lg shadow-lg">
                 <p>{notification.message}</p>
                 <span className="text-sm text-gray-500">
                   {formatDate(notification.timestamp)}

@@ -102,7 +102,7 @@ const Sidebar = () => {
 
       {/* Sidebar - Hidden on small screens, visible as a normal block on medium/large screens */}
       <div
-        className={`fixed top-0 left-0 w-64 h-full bg-gray-900 text-white flex flex-col justify-between transform ${
+        className={`fixed top-0 left-0 w-64 h-full bg-gray-900 text-white flex flex-col justify-between transform z-40 ${
           isSidebarOpen ? "translate-x-0  pt-20" : "-translate-x-full pt-6"
         } transition-transform duration-300 ease-in-out shadow-lg md:relative md:translate-x-0 md:w-64`}
       >

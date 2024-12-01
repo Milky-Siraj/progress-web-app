@@ -69,8 +69,8 @@ const ProfilePage = () => {
   return (
     <div className="flex flex-col items-center p-20 bg-gray-800 text-white min-h-screen">
       {/* Profile Info */}
-      <div className="flex flex-col items-center w-full md:flex-row md:items-start md:justify-center mb-10">
-        <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg">
+      <div className="flex flex-col items-center w-full md:flex-row md:items-start md:justify-center mb-10 overflow-hidden">
+        <div className=" relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg ">
           <Image
             src={profilePicture || profileDefault}
             alt="Profile Picture"
@@ -92,13 +92,13 @@ const ProfilePage = () => {
 
           {/* Edit & Sign Out Buttons */}
           <div className="flex gap-4 mt-6">
-            <button className="flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-lg transform transition duration-150 hover:scale-105">
+            <button className="flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-lg transition duration-150">
               <FaEdit />
               Edit Profile
             </button>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg shadow-lg transform transition duration-150 hover:scale-105"
+              className="flex items-center gap-2 px-5 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg shadow-lg transition duration-150"
             >
               Sign Out
             </button>
