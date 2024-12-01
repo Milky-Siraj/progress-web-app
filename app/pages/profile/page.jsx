@@ -67,7 +67,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-20 bg-gray-800 text-white min-h-screen">
+    <div className="flex flex-col items-center pt-20 bg-gray-800 text-white min-h-screen">
       {/* Profile Info */}
       <div className="flex flex-col items-center w-full md:flex-row md:items-start md:justify-center mb-10 overflow-hidden">
         <div className=" relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg ">
