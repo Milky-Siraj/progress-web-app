@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
-const LogBugModal = ({ closeModal }) => {
+const LogBugModal = ({ closeModal, addBug }) => {
   const { data: session } = useSession();
   const name = session?.user?.name;
   const { id } = useParams();
@@ -25,13 +26,35 @@ const LogBugModal = ({ closeModal }) => {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+
+      const resBug = await fetch(`/api/bug`, {
+        method: "POST",
+        body: formData,
+      });
+      if (resBug.status === 200) {
+        addBug(bug);
+        closeModal();
+        toast.success("bug added");
+      } else {
+        toast.error("failed to add bug");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("failed to add bug");
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-gray-700 p-6 rounded-lg w-full max-w-lg mx-4 sm:mx-6 md:w-2/3 lg:w-1/3">
         <h2 className="text-2xl font-bold text-white mb-4 text-center">
           Log Bug
         </h2>
-        <form action="/api/bug" method="POST">
+        <form onSubmit={handleSubmit}>
           {/* Hidden Project ID */}
           <input type="hidden" name="projectId" value={bug.projectId} />
 

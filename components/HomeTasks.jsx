@@ -75,6 +75,8 @@ const HomeTasks = () => {
     return { todayTasks, previous7DaysTasks, previous30DaysTasks, olderTasks };
   };
 
+  tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   // Helper functions to check date ranges
   const isToday = (date) => {
     const today = new Date();

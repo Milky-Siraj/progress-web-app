@@ -107,6 +107,9 @@ const Project = () => {
     return new Date(dueDate) < currentDate;
   };
 
+  const addTask = (newTask) => {
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  };
   return (
     <div>
       <div className="flex-1 p-6 bg-gray-800 text-white min-h-screen">
@@ -252,6 +255,7 @@ const Project = () => {
           closeModal={() => setIsModalOpen(false)}
           projectId={id}
           members={members}
+          addTask={addTask}
         />
       )}
 

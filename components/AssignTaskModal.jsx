@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { fetchSingleCproject } from "@/utils/request";
 
-const AssignTaskModal = ({ closeModal, projectId, members }) => {
+const AssignTaskModal = ({ closeModal, projectId, members, addTask }) => {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -55,8 +55,8 @@ const AssignTaskModal = ({ closeModal, projectId, members }) => {
         body: formData,
       });
       if (resTask.status === 200) {
+        addTask(fields);
         toast.success("task added");
-        //window.location.reload();
       } else {
         toast.error("failed to add task");
       }

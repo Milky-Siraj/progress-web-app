@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const TaskModal = ({ isOpen, onClose, addTask }) => {
   const [task, setTask] = useState({
@@ -18,13 +19,35 @@ const TaskModal = ({ isOpen, onClose, addTask }) => {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+
+      const resTask = await fetch(`/api/tasks`, {
+        method: "POST",
+        body: formData,
+      });
+      if (resTask.status === 200) {
+        addTask(task);
+        onClose();
+        toast.success("task added");
+      } else {
+        toast.error("failed to add task");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("failed to add task");
+    }
+  };
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-gray-900 text-white p-6 rounded-lg w-full max-w-md mx-4 sm:mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Add New Task</h2>
-        <form action="/api/tasks" method="POST">
+        <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="title" className="block text-gray-300 mb-2">
               Task Title

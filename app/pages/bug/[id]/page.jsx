@@ -73,6 +73,10 @@ const LogBugsPage = () => {
       alert("Bug want deleted");
     }
   };
+
+  const addBug = (newBug) => {
+    setBugs((prevBugs) => [...prevBugs, newBug]);
+  };
   return (
     <div className="flex-1 p-6 bg-gray-800 text-white min-h-screen">
       <div className="flex justify-end mb-4">
@@ -194,7 +198,9 @@ const LogBugsPage = () => {
           </tbody>
         </table>
       </div>
-      {isModalOpen && <LogBugModal closeModal={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <LogBugModal closeModal={() => setIsModalOpen(false)} addBug={addBug} />
+      )}
       {isEditModalOpen && selectedTask && (
         <EditBugModal
           task={selectedTask}
