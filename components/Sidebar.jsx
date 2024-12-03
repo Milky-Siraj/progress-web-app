@@ -121,20 +121,23 @@ const Sidebar = () => {
               </Link>
             </li>
 
-            <li className="mb-4">
+            {/* <li className="mb-4">
               <Link href="/create-team" onClick={() => setIsSidebarOpen(false)}>
                 <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
                   <FaPlus className="text-lg" />
                   <span className="text-sm font-medium">Create Project</span>
                 </div>
               </Link>
-            </li>
+            </li> */}
           </ul>
 
-          <div className="mt-6 mb-4">
+          <div className="flex justify-between mt-6 mb-4">
             <span className="text-gray-400 text-xl font-semibold">
               Projects
             </span>
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-200 hover:bg-gray-500 transition-colors duration-200 ease-in-out cursor-pointer shadow-lg">
+              <FaPlus className="text-lg" />
+            </button>
           </div>
 
           {/* Display project names */}
