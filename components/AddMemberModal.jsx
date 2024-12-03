@@ -98,9 +98,9 @@ const AddMemberModal = ({ closeModal, projectId }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-gray-700 p-6 rounded-lg w-1/3">
+      <div className="bg-gray-700 p-6 rounded-lg w-full max-w-md mx-4 sm:w-2/3 lg:w-1/3">
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center space-x-4 mb-4">
+          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
             <input
               type="text"
               name="searchTerm"
