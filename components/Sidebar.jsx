@@ -63,32 +63,6 @@ const Sidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // const handleProjectDelete = async (pId) => {
-  //   try {
-  //     const confirm = window.confirm(
-  //       "Are you sure you want to delete this project? Notice all the tasks are going to be lost"
-  //     );
-  //     if (!confirm) return;
-
-  //     const responseDelete = await fetch("/api/create-project", {
-  //       method: "DELETE",
-  //       body: JSON.stringify({ pId }),
-  //     });
-
-  //     if (responseDelete.status == 200) {
-  //       toast.success("project deleted successfully");
-  //       const updatedProjectNames = projectName.filter(
-  //         (project) => project._id !== pId
-  //       );
-  //       setProjectName(updatedProjectNames);
-  //     } else {
-  //       toast.error("failed to delete project");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("failed to delete project");
-  //   }
-  // };
   return (
     <>
       <div className="fixed top-4 left-4 z-50 md:hidden">
