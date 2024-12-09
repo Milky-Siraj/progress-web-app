@@ -109,9 +109,13 @@ const Sidebar = () => {
             <span className="text-gray-400 text-xl font-semibold">
               Projects
             </span>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-200 hover:bg-gray-500 transition-colors duration-200 ease-in-out cursor-pointer shadow-lg">
+            <Link
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-200 hover:bg-gray-500 transition-colors duration-200 ease-in-out cursor-pointer shadow-lg"
+              href="/create-team"
+              onClick={() => setIsSidebarOpen(false)}
+            >
               <FaPlus className="text-lg" />
-            </button>
+            </Link>
           </div>
 
           {/* Display project names */}
