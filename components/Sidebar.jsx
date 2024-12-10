@@ -8,6 +8,7 @@ import profileDefault from "@/assets/profile.png";
 import { useSession } from "next-auth/react";
 import { fetchCProject, fetchNotifications } from "@/utils/request";
 import { usePathname } from "next/navigation";
+import EnterTeamNameModal from "@/components/EnterTeamNameModal";
 
 const Sidebar = () => {
   const { data: session } = useSession();
@@ -19,6 +20,7 @@ const Sidebar = () => {
   const [projectName, setProjectName] = useState([]); // Initialize with an empty array
   const [notification, setNotification] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for toggling sidebar
+  const [isEnterNameModalOpen, setIsEnterNameModalOPen] = useState(false);
 
   // Poll for unread notifications every 10 seconds
   useEffect(() => {
@@ -110,9 +112,9 @@ const Sidebar = () => {
               Projects
             </span>
             <Link
+              href="/components/EnterTeamNameModal"
               className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-200 hover:bg-gray-500 transition-colors duration-200 ease-in-out cursor-pointer shadow-lg"
-              href="/create-team"
-              onClick={() => setIsSidebarOpen(false)}
+              onClick={() => setIsEnterNameModalOPen(true)}
             >
               <FaPlus className="text-lg" />
             </Link>
@@ -191,6 +193,12 @@ const Sidebar = () => {
             </Link>
           </ul>
         </div>
+        {isEnterNameModalOpen && (
+          <EnterTeamNameModal
+            closeModal={() => setIsEnterNameModalOPen(false)}
+            //teamMembers={teamMemberEmails}
+          />
+        )}
       </div>
     </>
   );
