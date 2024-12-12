@@ -7,7 +7,7 @@ import { fetchProject, fetchSingleCproject } from "@/utils/request";
 import { useParams } from "next/navigation";
 
 import EditTaskModal from "@/components/EditTaskModal";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import AddMemberModal from "@/components/AddMemberModal";
 
@@ -126,16 +126,22 @@ const Project = () => {
         </div>
         <h1 className="text-3xl font-bold mb-4">Team Members</h1>
 
-        <div className="flex gap-4 mb-6 pb-4 overflow-x-auto whitespace-nowrap scrollbar-custom ">
+        <div className="flex  gap-4 mb-6 pb-4 overflow-x-auto whitespace-nowrap scrollbar-custom ">
           {members && members.length > 0 ? (
             members.map((member) => (
               <div
                 key={member._id}
-                className="bg-gray-700 p-4 rounded-lg flex-1 text-center"
+                className=" flex justify-between bg-gray-700 p-4 rounded-lg flex-1 text-center"
               >
                 <p>
                   {member} {/* Display the name */}
                 </p>
+                <button
+                  className="text-red-600 hover:text-red-500 ml-2 transition-colors duration-200 ease-in-out"
+                  onClick={() => handleDelete(member._id)} // Adjust based on your delete logic
+                >
+                  <FaTrash className="text-sm" />
+                </button>
               </div>
             ))
           ) : (
