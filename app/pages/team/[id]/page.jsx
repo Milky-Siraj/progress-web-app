@@ -110,6 +110,9 @@ const Project = () => {
   const addTask = (newTask) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
+  const addMember = (newMember) => {
+    setMembers((prevMembers) => [...prevMembers, newMember]);
+  };
   return (
     <div>
       <div className="flex-1 p-6 bg-gray-800 text-white min-h-screen">
@@ -275,7 +278,7 @@ const Project = () => {
         <AddMemberModal
           closeModal={() => setIsAddMemberModalOpen(false)}
           projectId={id}
-          // members={members}
+          addMember={addMember}
         />
       )}
     </div>

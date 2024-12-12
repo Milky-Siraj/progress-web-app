@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { fetchSingleCproject } from "@/utils/request";
 
-const AddMemberModal = ({ closeModal, projectId }) => {
+const AddMemberModal = ({ closeModal, projectId, addMember }) => {
   const searchParams = useSearchParams();
 
   const [teamMembers, setTeamMembers] = useState([]);
@@ -80,6 +80,7 @@ const AddMemberModal = ({ closeModal, projectId }) => {
 
         if (res.ok) {
           const data = await res.json();
+          addMember(newMembers);
           console.log("Members added successfully:", data);
           toast.success("Added successfully");
         } else {
