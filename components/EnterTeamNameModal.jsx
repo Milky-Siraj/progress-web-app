@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
   const { data: session } = useSession();
@@ -71,6 +72,7 @@ const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
         });
 
         await Promise.all(notifications); // Ensure all notifications are sent
+        toast.success("Project created successfully");
 
         console.log(
           "Project created successfully with ID:",
@@ -78,11 +80,14 @@ const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
         );
         closeModal(); // Close modal after successful save
       } else {
+        toast.error("Failed to create Project. Please try again!");
         console.error("Failed to create project");
       }
     } catch (error) {
+      toast.error("Failed to create Project. Please try again!");
       console.error("Error:", error);
-      //console.log(projectId);
+    } finally {
+      closeModal();
     }
   };
 

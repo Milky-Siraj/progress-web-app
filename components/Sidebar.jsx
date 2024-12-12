@@ -1,7 +1,5 @@
-// to test vercel
-"use client";
 import { useState, useEffect } from "react";
-import { FaTasks, FaPlus, FaBell, FaTrash, FaBars } from "react-icons/fa";
+import { FaTasks, FaPlus, FaBell, FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import profileDefault from "@/assets/profile.png";
@@ -17,12 +15,11 @@ const Sidebar = () => {
 
   const pathname = usePathname();
 
-  const [projectName, setProjectName] = useState([]); // Initialize with an empty array
+  const [projectName, setProjectName] = useState([]);
   const [notification, setNotification] = useState([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for toggling sidebar
-  const [isEnterNameModalOpen, setIsEnterNameModalOPen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isEnterNameModalOpen, setIsEnterNameModalOpen] = useState(false);
 
-  // Poll for unread notifications every 10 seconds
   useEffect(() => {
     const getNotificationCount = async () => {
       try {
@@ -36,17 +33,13 @@ const Sidebar = () => {
       }
     };
 
-    // Fetch notifications immediately when the component mounts
     getNotificationCount();
 
-    // Set up polling to fetch notifications every 10 seconds
-    const intervalId = setInterval(getNotificationCount, 10000); // 10 seconds
+    const intervalId = setInterval(getNotificationCount, 10000);
 
-    // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
 
-  // Fetch project names when the component mounts
   useEffect(() => {
     const getProjectNames = async () => {
       try {
@@ -60,7 +53,6 @@ const Sidebar = () => {
     getProjectNames();
   }, []);
 
-  // Function to toggle sidebar visibility
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -68,7 +60,6 @@ const Sidebar = () => {
   return (
     <>
       <div className="fixed top-4 left-4 z-50 md:hidden">
-        {/* Hamburger Button to toggle sidebar */}
         <button
           onClick={toggleSidebar}
           className="text-white text-3xl p-2 bg-gray-800 rounded-lg shadow-lg focus:outline-none hover:bg-gray-700 transition-all duration-200 ease-in-out"
@@ -77,10 +68,9 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Sidebar - Hidden on small screens, visible as a normal block on medium/large screens */}
       <div
         className={`fixed top-0 left-0 w-64 h-full bg-gray-900 text-white flex flex-col justify-between transform z-40 ${
-          isSidebarOpen ? "translate-x-0  pt-20" : "-translate-x-full pt-6"
+          isSidebarOpen ? "translate-x-0 pt-20" : "-translate-x-full pt-6"
         } transition-transform duration-300 ease-in-out shadow-lg md:relative md:translate-x-0 md:w-64`}
       >
         <div className="pr-6 pl-6">
@@ -90,37 +80,26 @@ const Sidebar = () => {
                 href={`/pages/hometasks/${userId}`}
                 onClick={() => setIsSidebarOpen(false)}
               >
-                <div className="flex items-center gap-3  rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
+                <div className="flex items-center gap-3 rounded-lg transition-colors duration-200 ease-in-out cursor-pointer">
                   <FaTasks className="text-lg" />
                   <span className="text-sm font-medium">My Tasks</span>
                 </div>
               </Link>
             </li>
-
-            {/* <li className="mb-4">
-              <Link href="/create-team" onClick={() => setIsSidebarOpen(false)}>
-                <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
-                  <FaPlus className="text-lg" />
-                  <span className="text-sm font-medium">Create Project</span>
-                </div>
-              </Link>
-            </li> */}
           </ul>
 
           <div className="flex justify-between mt-6 mb-4">
             <span className="text-gray-400 text-xl font-semibold">
               Projects
             </span>
-            <Link
-              href="/components/EnterTeamNameModal"
+            <button
+              onClick={() => setIsEnterNameModalOpen(true)}
               className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-gray-200 hover:bg-gray-500 transition-colors duration-200 ease-in-out cursor-pointer shadow-lg"
-              onClick={() => setIsEnterNameModalOPen(true)}
             >
               <FaPlus className="text-lg" />
-            </Link>
+            </button>
           </div>
 
-          {/* Display project names */}
           {projectName.length === 0 ? (
             <div className="flex items-center gap-2 text-gray-300 ml-4">
               <span>No projects found</span>
@@ -141,17 +120,12 @@ const Sidebar = () => {
                   } flex justify-between gap-2 cursor-pointer ml-4 mt-3 text-sm text-gray-300 hover:bg-gray-800 rounded-lg px-3 py-2 transition-colors duration-200 ease-in-out`}
                 >
                   <span>{pname.name}</span>
-                  {/* <button
-                    className=" text-gray-500 hover:text-red-500"
-                    onClick={() => handleProjectDelete(pname._id)}
-                  >
-                    <FaTrash size={14} />
-                  </button> */}
                 </div>
               </Link>
             ))
           )}
         </div>
+
         <div className="pr-6 pl-6">
           <ul>
             <li className="mb-4">
@@ -159,7 +133,7 @@ const Sidebar = () => {
                 href="/pages/profile"
                 onClick={() => setIsSidebarOpen(false)}
               >
-                <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
+                <div className="flex items-center gap-3 rounded-lg transition-colors duration-200 ease-in-out cursor-pointer">
                   <Image
                     className="h-6 w-6 rounded-full"
                     src={profileImage || profileDefault}
@@ -176,7 +150,7 @@ const Sidebar = () => {
               onClick={() => setIsSidebarOpen(false)}
             >
               <li className="mb-4">
-                <div className="flex items-center gap-3 rounded-lg  transition-colors duration-200 ease-in-out cursor-pointer">
+                <div className="flex items-center gap-3 rounded-lg transition-colors duration-200 ease-in-out cursor-pointer">
                   <div className="relative flex items-center">
                     <FaBell className="text-xl text-gray-300" />
                     {notification.length > 0 && (
@@ -193,13 +167,15 @@ const Sidebar = () => {
             </Link>
           </ul>
         </div>
-        {isEnterNameModalOpen && (
-          <EnterTeamNameModal
-            closeModal={() => setIsEnterNameModalOPen(false)}
-            //teamMembers={teamMemberEmails}
-          />
-        )}
       </div>
+
+      {isEnterNameModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <EnterTeamNameModal
+            closeModal={() => setIsEnterNameModalOpen(false)}
+          />
+        </div>
+      )}
     </>
   );
 };
