@@ -57,6 +57,10 @@ const Sidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const addProjectName = (newProjectName) => {
+    setProjectName((prevProjectName) => [...prevProjectName, newProjectName]);
+  };
+
   return (
     <>
       <div className="fixed top-4 left-4 z-50 md:hidden">
@@ -172,6 +176,7 @@ const Sidebar = () => {
       {isEnterNameModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <EnterTeamNameModal
+            addProjectName={addProjectName}
             closeModal={() => setIsEnterNameModalOpen(false)}
           />
         </div>

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
+const EnterTeamNameModal = ({ closeModal, teamMembers, addProjectName }) => {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
   const [projectName, setProjectName] = useState({
@@ -43,35 +43,39 @@ const EnterTeamNameModal = ({ closeModal, teamMembers }) => {
         const createdProject = await res.json(); // Parse the response to get the project details
         const projectId = createdProject.project._id; // Store the project ID
 
-        // Send a notification for each team member
-        const notifications = projectName.members.map(async (member) => {
-          const notification = {
-            message: `${userEmail} added you to ${projectName.name} project`,
-            recipientEmail: member,
-            senderEmail: userEmail,
-            requests: true,
-            projectId, // Include projectId in the notification
-          };
+        addProjectName(projectName);
 
-          try {
-            const resNotification = await fetch("/api/notification", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(notification),
-            });
-            if (resNotification.ok) {
-              console.log(`Notification sent to ${member}`);
-            } else {
-              console.log(`Failed to send notification to ${member}`);
+        if (teamMembers) {
+          // Send a notification for each team member
+          const notifications = projectName.members.map(async (member) => {
+            const notification = {
+              message: `${userEmail} added you to ${projectName.name} project`,
+              recipientEmail: member,
+              senderEmail: userEmail,
+              requests: true,
+              projectId, // Include projectId in the notification
+            };
+
+            try {
+              const resNotification = await fetch("/api/notification", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(notification),
+              });
+              if (resNotification.ok) {
+                console.log(`Notification sent to ${member}`);
+              } else {
+                console.log(`Failed to send notification to ${member}`);
+              }
+            } catch (error) {
+              console.log(error);
             }
-          } catch (error) {
-            console.log(error);
-          }
-        });
+          });
+          await Promise.all(notifications); // Ensure all notifications are sent
+        }
 
-        await Promise.all(notifications); // Ensure all notifications are sent
         toast.success("Project created successfully");
 
         console.log(
