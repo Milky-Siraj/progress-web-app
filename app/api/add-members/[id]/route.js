@@ -51,9 +51,17 @@ export const DELETE = async (req, { params }) => {
     }
 
     // Remove the member from the members array
-    if (project.owner !== userId && member !== sessionUser.email) {
-      return new Response({ message: "forbidden" }, { status: 403 });
+    if (project.owner.toString() !== userId && member !== sessionUser.email) {
+      return new Response(
+        { message: "You are not authorized to perform this action" },
+        { status: 403 }
+      );
     }
+    // if (project.owner.toString() === member) {
+    //   return new Response(JSON.stringify({ message: "Not Allowed" }), {
+    //     status: 405,
+    //   });
+    // }
     project.members = project.members.filter((m) => m !== member);
     await project.save(); // Save the updated project
 
