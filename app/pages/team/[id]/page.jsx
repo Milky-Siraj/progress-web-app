@@ -107,6 +107,38 @@ const Project = () => {
     return new Date(dueDate) < currentDate;
   };
 
+  const handleDeleteMember = async (memberD) => {
+    const confirm = window.confirm(
+      `Are you sure you want to remove ${memberD}?`
+    );
+
+    if (!confirm) return;
+
+    try {
+      const res = await fetch(`/api/add-members/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ member: memberD }),
+      });
+
+      if (res.ok) {
+        const updatedMembers = members.filter((member) => member !== memberD);
+        setMembers(updatedMembers);
+        toast.success(`Member removed ${res.status}`);
+      } else {
+        toast.error(
+          `Couldn't remove Member. Please try again!${res.status} ${id} `
+        );
+        console.error("delete not working");
+      }
+    } catch (error) {
+      toast.error("Couldn't remove Member. Please try again! catch");
+      console.log(error);
+    }
+  };
+
   const addTask = (newTask) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
@@ -138,7 +170,7 @@ const Project = () => {
                 </p>
                 <button
                   className="text-red-600 hover:text-red-500 ml-2 transition-colors duration-200 ease-in-out"
-                  onClick={() => handleDelete(member._id)} // Adjust based on your delete logic
+                  onClick={() => handleDeleteMember(member)} // Adjust based on your delete logic
                 >
                   <FaTrash className="text-sm" />
                 </button>
@@ -146,7 +178,7 @@ const Project = () => {
             ))
           ) : (
             <p>
-              No members available
+              Please Add a Member
             </p> /* Fallback in case there are no members */
           )}
           <div className="text-white text-l px-4 py-0 rounded bg-gray-700 hover:bg-gray-400 flex item-center justify-center">

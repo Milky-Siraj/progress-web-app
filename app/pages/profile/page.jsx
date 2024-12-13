@@ -53,10 +53,14 @@ const ProfilePage = () => {
 
       if (responseDelete.status === 200) {
         toast.success("Project deleted successfully");
-        const updatedProjectNames = projectsNameCreated.filter(
+        const updatedProjectNameCreated = projectsNameCreated.filter(
           (project) => project._id !== pId
         );
-        setProjectsNameCreated(updatedProjectNames);
+        const updatedProjectNames = projectName.filter(
+          (project) => project._id !== pId
+        );
+        setProjectsNameCreated(updatedProjectNameCreated);
+        setProjectName(updatedProjectNames);
       } else {
         toast.error("Failed to delete project");
       }
