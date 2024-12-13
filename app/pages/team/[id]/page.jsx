@@ -128,13 +128,11 @@ const Project = () => {
         setMembers(updatedMembers);
         toast.success(`Member removed ${res.status}`);
       } else {
-        toast.error(
-          `Couldn't remove Member. Please try again!${res.status} ${id} `
-        );
+        toast.error(`Couldn't remove Member. Please try again!`);
         console.error("delete not working");
       }
     } catch (error) {
-      toast.error("Couldn't remove Member. Please try again! catch");
+      toast.error("Couldn't remove Member. Please try again! ");
       console.log(error);
     }
   };
