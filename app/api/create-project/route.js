@@ -53,7 +53,9 @@ export const POST = async (request) => {
     };
 
     const newCProject = new Cproject(cprojectData);
+    newCProject.members.push(sessionUser.email);
     await newCProject.save();
+
     console.log(cprojectData);
     return new Response(
       JSON.stringify({
