@@ -1,6 +1,7 @@
 import connectDB from "@/config/database";
 import Project from "@/models/Project";
 import Cproject from "@/models/Cproject";
+import { getSessionUser } from "@/utils/getSessionUser";
 
 export const POST = async (req, { params }) => {
   try {
@@ -35,6 +36,12 @@ export const DELETE = async (req, { params }) => {
   try {
     await connectDB();
 
+    const sessionUser = await getSessionUser();
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response("User Id is required", { status: 401 });
+    }
+    const { userId } = sessionUser; // Assuming the sessionUser contains the user ID
+
     const { id } = params; // Get the project ID from params
     const { member } = await req.json(); // Get the member to delete from the request body
 
@@ -44,7 +51,9 @@ export const DELETE = async (req, { params }) => {
     }
 
     // Remove the member from the members array
-    console.log(`this is the member ${member}`);
+    if (project.owner !== userId && member !== sessionUser.email) {
+      return new Response({ message: "forbidden" }, { status: 403 });
+    }
     project.members = project.members.filter((m) => m !== member);
     await project.save(); // Save the updated project
 
