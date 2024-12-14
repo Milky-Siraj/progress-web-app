@@ -126,15 +126,17 @@ const Project = () => {
       if (res.ok) {
         const updatedMembers = members.filter((member) => member !== memberD);
         setMembers(updatedMembers);
-        toast.success(`Member removed ${res.status}`);
+        toast.success(`Member removed `);
       } else if (res.status === 403) {
         toast.error(`You're not the owner of the project`);
+      } else if (res.status === 405) {
+        toast.error("You can not remove the owner");
       } else {
-        toast.error(`Couldn't remove Member. Please try again! ${res.status}`);
+        toast.error(`Couldn't remove Member. Please try again! `);
         console.error("delete not working");
       }
     } catch (error) {
-      toast.error(`Couldn't remove Member. Please try again!${res.status}`);
+      toast.error(`Couldn't remove Member. Please try again!`);
       console.log(error);
     }
   };

@@ -57,11 +57,14 @@ export const DELETE = async (req, { params }) => {
         { status: 403 }
       );
     }
-    // if (project.owner.toString() === member) {
-    //   return new Response(JSON.stringify({ message: "Not Allowed" }), {
-    //     status: 405,
-    //   });
-    // }
+    const projectEmail = await Cproject.findById(id).populate("owner");
+
+    if (projectEmail.owner.email === member) {
+      return new Response(JSON.stringify({ message: "Not Allowed" }), {
+        status: 405,
+      });
+    }
+    console.log(projectEmail.owner.email);
     project.members = project.members.filter((m) => m !== member);
     await project.save(); // Save the updated project
 
