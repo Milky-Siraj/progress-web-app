@@ -23,6 +23,8 @@ const Project = () => {
   const [selectedTask, setSelectedTask] = useState(null); // To store task being edited
   const [members, setMembers] = useState([]);
 
+  const [projectName, setProjectName] = useState("");
+
   useEffect(() => {
     const getProjects = async () => {
       const fetchedProjects = await fetchProject(id);
@@ -38,6 +40,7 @@ const Project = () => {
         const fetchedProjectMembers = await fetchSingleCproject(id);
 
         setMembers(fetchedProjectMembers?.members || []);
+        setProjectName(fetchSingleMembers?.name || []);
       } catch (error) {
         console.error("Failed to fetch project members", error);
       }
@@ -319,6 +322,7 @@ const Project = () => {
           closeModal={() => setIsAddMemberModalOpen(false)}
           projectId={id}
           addMember={addMember}
+          projectName={projectName}
         />
       )}
     </div>
