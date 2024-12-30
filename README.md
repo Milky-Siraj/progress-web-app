@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Group Members
+| Name                  | ID No         |
+|-----------------------|---------------|
+| Lulit Ayele           | ETS0781/13    |
+| Meheret Alemu        | ETS0813/13    |
+| Metasebia Fetene     | ETS0849/13    |
+| Mihret Tekalgn       | ETS0876/13    |
+| Milky Siraj          | ETS0895/13    |
 ## Getting Started
 
 First, run the development server:
