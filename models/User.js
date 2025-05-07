@@ -9,7 +9,15 @@ const UserSchema = new Schema(
     },
     username: {
       type: String,
-      required: [true, "username is required"],
+      required: false,
+    },
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+    },
+    password: {
+      type: String,
+      required: false,
     },
     image: { type: String },
     bookmarks: [

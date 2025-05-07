@@ -1,6 +1,8 @@
 import connectDB from "@/config/database";
 import User from "@/models/User";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 export const authOptions = {
   providers: [
@@ -14,23 +16,63 @@ export const authOptions = {
         response_type: "code",
       },
     }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Invalid credentials');
+        }
+
+        await connectDB();
+
+        const user = await User.findOne({ email: credentials.email });
+
+        if (!user || !user?.password) {
+          throw new Error('Invalid credentials');
+        }
+
+        const isCorrectPassword = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isCorrectPassword) {
+          throw new Error('Invalid credentials');
+        }
+
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        };
+      }
+    })
   ],
   callbacks: {
     //invoke on successful signin
-    async signIn({ profile }) {
+    async signIn({ profile, account }) {
       //1. connect to the db
       await connectDB();
-      //2. check if user exists
-      const userExists = await User.findOne({ email: profile.email });
-      //3 if user doesnt exist add user
-      if (!userExists) {
-        const username = profile.name.slice(0, 20);
+      
+      // Only handle Google sign-in
+      if (account?.provider === 'google') {
+        //2. check if user exists
+        const userExists = await User.findOne({ email: profile.email });
+        //3 if user doesnt exist add user
+        if (!userExists) {
+          const username = profile.name.slice(0, 20);
 
-        await User.create({
-          email: profile.email,
-          username,
-          image: profile.picture,
-        });
+          await User.create({
+            email: profile.email,
+            username,
+            image: profile.picture,
+          });
+        }
       }
       return true;
     },
@@ -43,4 +85,11 @@ export const authOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: '/',
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
