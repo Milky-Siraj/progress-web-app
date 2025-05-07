@@ -12,19 +12,36 @@ export const GET = async (request) => {
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get("searchTerm");
 
+    if (!searchTerm) {
+      return new Response(JSON.stringify([]), { status: 200 });
+    }
+
     const searchTermPattern = new RegExp(searchTerm, "i");
 
     let query = {
-      $or: [{ name: searchTermPattern, email: searchTermPattern }],
+      $or: [
+        { email: searchTermPattern },
+        { username: searchTermPattern },
+        { name: searchTermPattern }
+      ]
     };
-    const user = await User.find(query);
-    return new Response(JSON.stringify(user), {
+
+    const users = await User.find(query).select('name username email');
+    console.log('Found users:', users); // Debug log
+
+    return new Response(JSON.stringify(users), {
       status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
   } catch (error) {
-    console.log(error);
-    return new Response("Something went wrong ", {
+    console.error('Search error:', error);
+    return new Response(JSON.stringify({ error: "Something went wrong" }), {
       status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
   }
 };
